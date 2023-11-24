@@ -192,21 +192,21 @@ typedef enum {										// Type of operator
 
 void debugHandleInactive();
 void debugSetLevel(uint8_t level);
-void debugSilence(boolean activate, boolean showMessage, boolean fromBreak = false);
+void debugSilence(bool activate, bool showMessage, bool fromBreak = false);
 void debugPrintInfo(const char level, const char* function);
 
 #ifndef DEBUG_MINIMUM
 
-void debugHandleEvent(boolean calledByHandleEvent);
+void debugHandleEvent(bool calledByHandleEvent);
 String debugBreak();
-String debugBreak(const __FlashStringHelper * str, uint32_t timeout = DEBUG_BREAK_TIMEOUT, boolean byWatch = false);
-String debugBreak(const char* str, uint32_t timeout = DEBUG_BREAK_TIMEOUT, boolean byWatch = false);
+String debugBreak(const __FlashStringHelper * str, uint32_t timeout = DEBUG_BREAK_TIMEOUT, bool byWatch = false);
+String debugBreak(const char* str, uint32_t timeout = DEBUG_BREAK_TIMEOUT, bool byWatch = false);
 
-void debugSetProfiler(boolean active);
+void debugSetProfiler(bool active);
 
 #ifndef BOARD_LOW_MEMORY // Not for low memory boards
 	String debugBreak(String& str, uint32_t timeout = DEBUG_BREAK_TIMEOUT);
-	void debugShowProfiler(boolean activate, uint16_t minTime, boolean showMessage);
+	void debugShowProfiler(bool activate, uint16_t minTime, bool showMessage);
 #endif
 
 #endif // DEBUG_MINIMUM
@@ -228,7 +228,7 @@ void debugSetProfiler(boolean active);
 
 	#ifndef BOARD_LOW_MEMORY // Not for low memory boards
 
-		int8_t debugAddGlobalBoolean (const char* name, boolean* pointer);
+		int8_t debugAddGlobalBool (const char* name, bool* pointer);
 		int8_t debugAddGlobalChar (const char* name, char* pointer);
 		int8_t debugAddGlobalByte (const char* name, uint8_t* pointer);
 		int8_t debugAddGlobalInt (const char* name, int* pointer);
@@ -265,7 +265,7 @@ void debugSetProfiler(boolean active);
 
 		void debugSetLastFunctionDescription(const __FlashStringHelper *description);
 
-		int8_t debugAddGlobalBoolean (const __FlashStringHelper* name, boolean* pointer);
+		int8_t debugAddGlobalBool (const __FlashStringHelper* name, bool* pointer);
 		int8_t debugAddGlobalChar (const __FlashStringHelper* name, char* pointer);
 		int8_t debugAddGlobalByte (const __FlashStringHelper* name, uint8_t* pointer);
 		int8_t debugAddGlobalInt (const __FlashStringHelper* name, int* pointer);
@@ -295,69 +295,69 @@ void debugSetProfiler(boolean active);
 
 		// Watches
 
-		int8_t debugAddWatchBoolean (uint8_t globalNum, uint8_t operation, boolean value, boolean allwaysStop = false);
-		int8_t debugAddWatchChar (uint8_t globalNum, uint8_t operation, char value, boolean allwaysStop = false);
-		int8_t debugAddWatchByte (uint8_t globalNum, uint8_t operation, uint8_t value, boolean allwaysStop = false);
-		int8_t debugAddWatchInt (uint8_t globalNum, uint8_t operation, int value, boolean allwaysStop = false);
-		int8_t debugAddWatchUInt (uint8_t globalNum, uint8_t operation, unsigned int value, boolean allwaysStop = false);
-		int8_t debugAddWatchLong (uint8_t globalNum, uint8_t operation, long value, boolean allwaysStop = false);
-		int8_t debugAddWatchULong (uint8_t globalNum, uint8_t operation, unsigned long value, boolean allwaysStop = false);
-		int8_t debugAddWatchFloat (uint8_t globalNum, uint8_t operation, float value, boolean allwaysStop = false);
-		int8_t debugAddWatchDouble (uint8_t globalNum, uint8_t operation, double value, boolean allwaysStop = false);
-		int8_t debugAddWatchInt8_t (uint8_t globalNum, uint8_t operation, int8_t value, boolean allwaysStop = false);
-		int8_t debugAddWatchInt16_t (uint8_t globalNum, uint8_t operation, int16_t value, boolean allwaysStop = false);
-		int8_t debugAddWatchInt32_t (uint8_t globalNum, uint8_t operation, int32_t value, boolean allwaysStop = false);
-		int8_t debugAddWatchUInt8_t (uint8_t globalNum, uint8_t operation, uint8_t value, boolean allwaysStop = false);
-		int8_t debugAddWatchUInt16_t (uint8_t globalNum, uint8_t operation, uint16_t value, boolean allwaysStop = false);
-		int8_t debugAddWatchUInt32_t (uint8_t globalNum, uint8_t operation, uint32_t value, boolean allwaysStop = false);
+		int8_t debugAddWatchBool (uint8_t globalNum, uint8_t operation, bool value, bool allwaysStop = false);
+		int8_t debugAddWatchChar (uint8_t globalNum, uint8_t operation, char value, bool allwaysStop = false);
+		int8_t debugAddWatchByte (uint8_t globalNum, uint8_t operation, uint8_t value, bool allwaysStop = false);
+		int8_t debugAddWatchInt (uint8_t globalNum, uint8_t operation, int value, bool allwaysStop = false);
+		int8_t debugAddWatchUInt (uint8_t globalNum, uint8_t operation, unsigned int value, bool allwaysStop = false);
+		int8_t debugAddWatchLong (uint8_t globalNum, uint8_t operation, long value, bool allwaysStop = false);
+		int8_t debugAddWatchULong (uint8_t globalNum, uint8_t operation, unsigned long value, bool allwaysStop = false);
+		int8_t debugAddWatchFloat (uint8_t globalNum, uint8_t operation, float value, bool allwaysStop = false);
+		int8_t debugAddWatchDouble (uint8_t globalNum, uint8_t operation, double value, bool allwaysStop = false);
+		int8_t debugAddWatchInt8_t (uint8_t globalNum, uint8_t operation, int8_t value, bool allwaysStop = false);
+		int8_t debugAddWatchInt16_t (uint8_t globalNum, uint8_t operation, int16_t value, bool allwaysStop = false);
+		int8_t debugAddWatchInt32_t (uint8_t globalNum, uint8_t operation, int32_t value, bool allwaysStop = false);
+		int8_t debugAddWatchUInt8_t (uint8_t globalNum, uint8_t operation, uint8_t value, bool allwaysStop = false);
+		int8_t debugAddWatchUInt16_t (uint8_t globalNum, uint8_t operation, uint16_t value, bool allwaysStop = false);
+		int8_t debugAddWatchUInt32_t (uint8_t globalNum, uint8_t operation, uint32_t value, bool allwaysStop = false);
 
-		int8_t debugAddWatchCharArray (uint8_t globalNum, uint8_t operation, const char* value, boolean allwaysStop = false);
-		int8_t debugAddWatchString (uint8_t globalNum, uint8_t operation, String value, boolean allwaysStop = false);
+		int8_t debugAddWatchCharArray (uint8_t globalNum, uint8_t operation, const char* value, bool allwaysStop = false);
+		int8_t debugAddWatchString (uint8_t globalNum, uint8_t operation, String value, bool allwaysStop = false);
 
-		int8_t debugAddWatchBoolean  (const char* globalName, uint8_t operation, boolean value, boolean allwaysStop = false);
-		int8_t debugAddWatchChar  (const char* globalName, uint8_t operation, char value, boolean allwaysStop = false);
-		int8_t debugAddWatchByte  (const char* globalName, uint8_t operation, uint8_t value, boolean allwaysStop = false);
-		int8_t debugAddWatchInt  (const char* globalName, uint8_t operation, int value, boolean allwaysStop = false);
-		int8_t debugAddWatchUInt  (const char* globalName, uint8_t operation, unsigned int value, boolean allwaysStop = false);
-		int8_t debugAddWatchLong  (const char* globalName, uint8_t operation, long value, boolean allwaysStop = false);
-		int8_t debugAddWatchULong  (const char* globalName, uint8_t operation, unsigned long value, boolean allwaysStop = false);
-		int8_t debugAddWatchFloat  (const char* globalName, uint8_t operation, float value, boolean allwaysStop = false);
-		int8_t debugAddWatchDouble  (const char* globalName, uint8_t operation, double value, boolean allwaysStop = false);
-		int8_t debugAddWatchInt8_t  (const char* globalName, uint8_t operation, int8_t value, boolean allwaysStop = false);
-		int8_t debugAddWatchInt16_t  (const char* globalName, uint8_t operation, int16_t value, boolean allwaysStop = false);
-		int8_t debugAddWatchInt32_t  (const char* globalName, uint8_t operation, int32_t value, boolean allwaysStop = false);
-		int8_t debugAddWatchUInt8_t  (const char* globalName, uint8_t operation, uint8_t value, boolean allwaysStop = false);
-		int8_t debugAddWatchUInt16_t  (const char* globalName, uint8_t operation, uint16_t value, boolean allwaysStop = false);
-		int8_t debugAddWatchUInt32_t  (const char* globalName, uint8_t operation, uint32_t value, boolean allwaysStop = false);
+		int8_t debugAddWatchBool  (const char* globalName, uint8_t operation, bool value, bool allwaysStop = false);
+		int8_t debugAddWatchChar  (const char* globalName, uint8_t operation, char value, bool allwaysStop = false);
+		int8_t debugAddWatchByte  (const char* globalName, uint8_t operation, uint8_t value, bool allwaysStop = false);
+		int8_t debugAddWatchInt  (const char* globalName, uint8_t operation, int value, bool allwaysStop = false);
+		int8_t debugAddWatchUInt  (const char* globalName, uint8_t operation, unsigned int value, bool allwaysStop = false);
+		int8_t debugAddWatchLong  (const char* globalName, uint8_t operation, long value, bool allwaysStop = false);
+		int8_t debugAddWatchULong  (const char* globalName, uint8_t operation, unsigned long value, bool allwaysStop = false);
+		int8_t debugAddWatchFloat  (const char* globalName, uint8_t operation, float value, bool allwaysStop = false);
+		int8_t debugAddWatchDouble  (const char* globalName, uint8_t operation, double value, bool allwaysStop = false);
+		int8_t debugAddWatchInt8_t  (const char* globalName, uint8_t operation, int8_t value, bool allwaysStop = false);
+		int8_t debugAddWatchInt16_t  (const char* globalName, uint8_t operation, int16_t value, bool allwaysStop = false);
+		int8_t debugAddWatchInt32_t  (const char* globalName, uint8_t operation, int32_t value, bool allwaysStop = false);
+		int8_t debugAddWatchUInt8_t  (const char* globalName, uint8_t operation, uint8_t value, bool allwaysStop = false);
+		int8_t debugAddWatchUInt16_t  (const char* globalName, uint8_t operation, uint16_t value, bool allwaysStop = false);
+		int8_t debugAddWatchUInt32_t  (const char* globalName, uint8_t operation, uint32_t value, bool allwaysStop = false);
 
-		int8_t debugAddWatchCharArray (const char* globalName, uint8_t operation, const char* value, boolean allwaysStop = false);
-		int8_t debugAddWatchString (const char* globalName, uint8_t operation, String value, boolean allwaysStop = false);
+		int8_t debugAddWatchCharArray (const char* globalName, uint8_t operation, const char* value, bool allwaysStop = false);
+		int8_t debugAddWatchString (const char* globalName, uint8_t operation, String value, bool allwaysStop = false);
 
-		int8_t debugAddWatchCross(uint8_t globalNum, uint8_t operation, uint8_t anotherGlobalNum, boolean allwaysStop = false);
-		int8_t debugAddWatchCross(const char* globalName, uint8_t operation, const char* anotherGlobalName, boolean allwaysStop = false);
+		int8_t debugAddWatchCross(uint8_t globalNum, uint8_t operation, uint8_t anotherGlobalNum, bool allwaysStop = false);
+		int8_t debugAddWatchCross(const char* globalName, uint8_t operation, const char* anotherGlobalName, bool allwaysStop = false);
 
 		// For Flash F
 
-		int8_t debugAddWatchBoolean (const __FlashStringHelper* globalName, uint8_t operation, boolean value, boolean allwaysStop = false);
-		int8_t debugAddWatchChar (const __FlashStringHelper* globalName, uint8_t operation, char value, boolean allwaysStop = false);
-		int8_t debugAddWatchByte (const __FlashStringHelper* globalName, uint8_t operation, byte value, boolean allwaysStop = false);
-		int8_t debugAddWatchInt (const __FlashStringHelper* globalName, uint8_t operation, int value, boolean allwaysStop = false);
-		int8_t debugAddWatchUInt (const __FlashStringHelper* globalName, uint8_t operation, unsigned int value, boolean allwaysStop = false);
-		int8_t debugAddWatchLong (const __FlashStringHelper* globalName, uint8_t operation, long value, boolean allwaysStop = false);
-		int8_t debugAddWatchULong (const __FlashStringHelper* globalName, uint8_t operation, unsigned long value, boolean allwaysStop = false);
-		int8_t debugAddWatchFloat (const __FlashStringHelper* globalName, uint8_t operation, float value, boolean allwaysStop = false);
-		int8_t debugAddWatchDouble (const __FlashStringHelper* globalName, uint8_t operation, double value, boolean allwaysStop = false);
-		int8_t debugAddWatchInt8_t (const __FlashStringHelper* globalName, uint8_t operation, int8_t value, boolean allwaysStop = false);
-		int8_t debugAddWatchInt16_t (const __FlashStringHelper* globalName, uint8_t operation, int16_t value, boolean allwaysStop = false);
-		int8_t debugAddWatchInt32_t (const __FlashStringHelper* globalName, uint8_t operation, int32_t value, boolean allwaysStop = false);
-		int8_t debugAddWatchUInt8_t (const __FlashStringHelper* globalName, uint8_t operation, uint8_t value, boolean allwaysStop = false);
-		int8_t debugAddWatchUInt16_t (const __FlashStringHelper* globalName, uint8_t operation, uint16_t value, boolean allwaysStop = false);
-		int8_t debugAddWatchUInt32_t (const __FlashStringHelper* globalName, uint8_t operation, uint32_t value, boolean allwaysStop = false);
+		int8_t debugAddWatchBool (const __FlashStringHelper* globalName, uint8_t operation, bool value, bool allwaysStop = false);
+		int8_t debugAddWatchChar (const __FlashStringHelper* globalName, uint8_t operation, char value, bool allwaysStop = false);
+		int8_t debugAddWatchByte (const __FlashStringHelper* globalName, uint8_t operation, byte value, bool allwaysStop = false);
+		int8_t debugAddWatchInt (const __FlashStringHelper* globalName, uint8_t operation, int value, bool allwaysStop = false);
+		int8_t debugAddWatchUInt (const __FlashStringHelper* globalName, uint8_t operation, unsigned int value, bool allwaysStop = false);
+		int8_t debugAddWatchLong (const __FlashStringHelper* globalName, uint8_t operation, long value, bool allwaysStop = false);
+		int8_t debugAddWatchULong (const __FlashStringHelper* globalName, uint8_t operation, unsigned long value, bool allwaysStop = false);
+		int8_t debugAddWatchFloat (const __FlashStringHelper* globalName, uint8_t operation, float value, bool allwaysStop = false);
+		int8_t debugAddWatchDouble (const __FlashStringHelper* globalName, uint8_t operation, double value, bool allwaysStop = false);
+		int8_t debugAddWatchInt8_t (const __FlashStringHelper* globalName, uint8_t operation, int8_t value, bool allwaysStop = false);
+		int8_t debugAddWatchInt16_t (const __FlashStringHelper* globalName, uint8_t operation, int16_t value, bool allwaysStop = false);
+		int8_t debugAddWatchInt32_t (const __FlashStringHelper* globalName, uint8_t operation, int32_t value, bool allwaysStop = false);
+		int8_t debugAddWatchUInt8_t (const __FlashStringHelper* globalName, uint8_t operation, uint8_t value, bool allwaysStop = false);
+		int8_t debugAddWatchUInt16_t (const __FlashStringHelper* globalName, uint8_t operation, uint16_t value, bool allwaysStop = false);
+		int8_t debugAddWatchUInt32_t (const __FlashStringHelper* globalName, uint8_t operation, uint32_t value, bool allwaysStop = false);
 
-		int8_t debugAddWatchCharArray (const __FlashStringHelper* globalName, uint8_t operation, const char* value, boolean allwaysStop = false);
-		int8_t debugAddWatchString (const __FlashStringHelper* globalName, uint8_t operation, String value, boolean allwaysStop = false);
+		int8_t debugAddWatchCharArray (const __FlashStringHelper* globalName, uint8_t operation, const char* value, bool allwaysStop = false);
+		int8_t debugAddWatchString (const __FlashStringHelper* globalName, uint8_t operation, String value, bool allwaysStop = false);
 
-		int8_t debugAddWatchCross(const __FlashStringHelper* globalName, uint8_t operation, const __FlashStringHelper* anotherGlobalName, boolean allwaysStop = false);
+		int8_t debugAddWatchCross(const __FlashStringHelper* globalName, uint8_t operation, const __FlashStringHelper* anotherGlobalName, bool allwaysStop = false);
 
 	#else // Low memory boards -> reduced number of functions
 
@@ -370,7 +370,7 @@ void debugSetProfiler(boolean active);
 
 		#define debugSetLastFunctionDescription(str) // Not compile this
 
-		int8_t debugAddGlobalBoolean (const __FlashStringHelper* name, boolean* pointer);
+		int8_t debugAddGlobalBool (const __FlashStringHelper* name, bool* pointer);
 		int8_t debugAddGlobalChar (const __FlashStringHelper* name, char* pointer);
 		int8_t debugAddGlobalInt (const __FlashStringHelper* name, int* pointer);
 		int8_t debugAddGlobalULong (const __FlashStringHelper* name, unsigned long* pointer);
@@ -385,7 +385,7 @@ void debugSetProfiler(boolean active);
 
 	// Handle debugger
 
-	void debugHandleDebugger (boolean calledByHandleEvent);
+	void debugHandleDebugger (bool calledByHandleEvent);
 
 #endif //DEBUG_DISABLE_DEBUGGER
 
@@ -394,15 +394,15 @@ void debugSetProfiler(boolean active);
 // For printf support, if not have a native
 
 #ifndef DEBUG_USE_NATIVE_PRINTF
-	void debugPrintf(boolean newline, const char level, const char* function, const char* format, ...);
-	void debugPrintf(boolean newline, const char level, const char* function, const __FlashStringHelper *format, ...) ;
+	void debugPrintf(bool newline, const char level, const char* function, const char* format, ...);
+	void debugPrintf(bool newline, const char level, const char* function, const __FlashStringHelper *format, ...) ;
 #endif
 
 #endif // DEBUG_MINIMUM
 
 //////// External variables (need to use macros)
 
-extern boolean _debugActive;		   			// Debug is only active after receive first data from Serial
+extern bool _debugActive;		   			// Debug is only active after receive first data from Serial
 extern uint8_t _debugLevel; 					// Current level of debug (init as disabled)
 extern bool _debugSilence;						// Silent mode ?
 
@@ -410,14 +410,14 @@ extern bool _debugShowProfiler;					// Show profiler time ?
 extern uint16_t _debugMinTimeShowProfiler;		// Minimum time to show profiler
 extern unsigned long _debugLastTime; 			// Last time show a debug
 
-extern boolean _debugPrintIsNewline;			// Used in print macros
+extern bool _debugPrintIsNewline;			// Used in print macros
 
 #ifndef DEBUG_DISABLE_DEBUGGER
 extern uint8_t _debugFunctionsAdded;			// Number of functions added
 extern uint8_t _debugGlobalsAdded;				// Number of globals added
 extern uint8_t _debugWatchesAdded;				// Number of watches added
-extern boolean _debugWatchesEnabled;			// Watches is enabled (only after add any)?
-extern boolean _debugDebuggerEnabled;			// Simple Software Debugger enabled ?
+extern bool _debugWatchesEnabled;			// Watches is enabled (only after add any)?
+extern bool _debugDebuggerEnabled;			// Simple Software Debugger enabled ?
 #endif
 
 //////// Defines and macros
@@ -816,7 +816,7 @@ extern boolean _debugDebuggerEnabled;			// Simple Software Debugger enabled ?
 
 #ifdef DEBUG_DISABLE_DEBUGGER
 
-	#define debugAddGlobalBoolean (...)
+	#define debugAddGlobalBool (...)
 	#define debugAddGlobalChar (...)
 	#define debugAddGlobalByte (...)
 	#define debugAddGlobalInt (...)
@@ -842,7 +842,7 @@ extern boolean _debugDebuggerEnabled;			// Simple Software Debugger enabled ?
 
 	#define debugSetLastGlobalDescription(...)
 
-	#define debugAddWatchBoolean (...)
+	#define debugAddWatchBool (...)
 	#define debugAddWatchChar (...)
 	#define debugAddWatchByte (...)
 	#define debugAddWatchInt (...)

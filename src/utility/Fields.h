@@ -21,7 +21,7 @@ class Fields
 
 		// Constructors
 
-		Fields(String str, const char delimiter = ':', boolean ignoreEmpty = false);
+		Fields(String str, const char delimiter = ':', bool ignoreEmpty = false);
 		~Fields(void);
 
 		// Methods

@@ -622,7 +622,7 @@ if (debugAddGlobalUInt8_t("mRunHours", &mRunHours) >= 0) {
 
 // Note: easy way, no descriptions ....
 
-debugAddGlobalBoolean("mBoolean", &mBoolean);
+debugAddGlobalBool("mBool", &mBool);
 debugAddGlobalChar("mChar",       &mChar);
 debugAddGlobalByte("mByte",       &mByte);
 debugAddGlobalInt("mInt",         &mInt);
@@ -663,9 +663,9 @@ And for __watches__ (not for low memory boards, as UNO):
 // Add watches for some global variables
 // Note: watches can be added/changed in serial monitor too
 
-// Watch -> mBoolean when changed (put 0 on value)
+// Watch -> mBool when changed (put 0 on value)
 
-debugAddWatchBoolean("mBoolean", DEBUG_WATCH_CHANGED, 0);
+debugAddWatchBool("mBool", DEBUG_WATCH_CHANGED, 0);
 
 // Watch -> mRunSeconds == 10
 

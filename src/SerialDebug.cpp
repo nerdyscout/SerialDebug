@@ -152,7 +152,7 @@ extern "C"
 
 /////// Variables - public
 
-boolean _debugActive = false;			// Debug is only active after receive first data from Serial
+bool _debugActive = false;				// Debug is only active after receive first data from Serial
 uint8_t _debugLevel = DEBUG_LEVEL_NONE; // Current level of debug (init as disabled)
 
 bool _debugSilence = false; // Silent mode ?
@@ -173,16 +173,16 @@ uint8_t _debugGlobalsAdded = 0; // Number of globals added
 
 #ifndef BOARD_LOW_MEMORY // Not for low memory boards
 
-uint8_t _debugWatchesAdded = 0;		  // Number of watches added
-boolean _debugWatchesEnabled = false; // Watches is enabled (only after add any)?
+uint8_t _debugWatchesAdded = 0;	   // Number of watches added
+bool _debugWatchesEnabled = false; // Watches is enabled (only after add any)?
 
 #endif
 
-boolean _debugDebuggerEnabled = false; // Simple Software Debugger enabled ?
+bool _debugDebuggerEnabled = false; // Simple Software Debugger enabled ?
 
 #endif // DEBUG_DISABLE_DEBUGGER
 
-boolean _debugPrintIsNewline = true; // Used in print macros
+bool _debugPrintIsNewline = true; // Used in print macros
 
 /////// Variables - private
 
@@ -193,7 +193,7 @@ boolean _debugPrintIsNewline = true; // Used in print macros
 typedef enum
 {
 
-	DEBUG_TYPE_BOOLEAN, // Basic types
+	DEBUG_TYPE_BOOL, // Basic types
 	DEBUG_TYPE_CHAR,
 	DEBUG_TYPE_INT,
 	DEBUG_TYPE_U_LONG,
@@ -268,10 +268,10 @@ struct debugGlobal_t
 	const char *description = 0;				 // Description
 	const __FlashStringHelper *descriptionF = 0; // Description (in flash)
 #endif
-	uint8_t typeOld = 0;			// Type of old value variable (used to strings)
-	void *pointerOld = 0;			// Generic pointer for old value
-	boolean changed = false;		// Value change (between 2 debug handle call)
-	boolean updateOldValue = false; // Update old value ? (in debug handle call)
+	uint8_t typeOld = 0;		 // Type of old value variable (used to strings)
+	void *pointerOld = 0;		 // Generic pointer for old value
+	bool changed = false;		 // Value change (between 2 debug handle call)
+	bool updateOldValue = false; // Update old value ? (in debug handle call)
 };
 
 #ifdef VECTOR_STD // Arduino arch have C++ std vector
@@ -301,11 +301,11 @@ struct debugWatch_t
 	uint8_t operation;			// Operation
 	uint8_t typeValue = 0;		// Type of old value variable (used to strings)
 	void *pointerValue = 0;		// Generic pointer to value (to do operation)
-	boolean watchCross = false; // Is a cross watch ?
+	bool watchCross = false;	// Is a cross watch ?
 	uint8_t globalNumCross = 0; // To watch cross - compare two globals
-	boolean enabled = true;		// Enabled ?
-	boolean triggered = false;	// Triggered ? (operation -> true)
-	boolean alwaysStop = false; // Always stop, even _debugWatchStop = false
+	bool enabled = true;		// Enabled ?
+	bool triggered = false;		// Triggered ? (operation -> true)
+	bool alwaysStop = false;	// Always stop, even _debugWatchStop = false
 };
 
 #ifdef VECTOR_STD // Arduino arch have C++ std vector
@@ -318,7 +318,7 @@ Vector<debugWatch_t> _debugWatches; // Vector array of watches
 
 #endif
 
-static boolean _debugWatchStop = true; // Causes a stop in debug for any positive watches ?
+static bool _debugWatchStop = true; // Causes a stop in debug for any positive watches ?
 
 static int8_t addWatch(Fields &fields);
 
@@ -330,7 +330,7 @@ static int8_t addWatch(Fields &fields);
 
 // Connection with SerialDebugApp ?
 
-static boolean _debugSerialApp = false;
+static bool _debugSerialApp = false;
 
 // String helper, used to store name extracted from Flash and receive commands
 // Unified this 2 usages, to reduce memory
@@ -343,7 +343,7 @@ static String _debugLastCommand = "";
 
 // Repeat last command (in each debugHandler)
 
-static boolean _debugRepeatCommand = false;
+static bool _debugRepeatCommand = false;
 
 // To show help (uses PROGMEM)
 // Note: Using PROGMEM in large string (even for Espressif boards)
@@ -478,7 +478,7 @@ static const char debugHelp[] PROGMEM =
 
 // Note: only public functions start with debug...
 
-static void processCommand(String &command, boolean repeating = false, boolean showError = true);
+static void processCommand(String &command, bool repeating = false, bool showError = true);
 static void showHelp();
 
 #ifndef DEBUG_DISABLE_DEBUGGER
@@ -489,7 +489,7 @@ static int8_t addFunction(const char *name, uint8_t argType);
 static int8_t addFunction(const __FlashStringHelper *name, uint8_t argType);
 
 static void processFunctions(String &options);
-static int8_t showFunctions(String &options, boolean one, boolean debugSerialApp = false);
+static int8_t showFunctions(String &options, bool one, bool debugSerialApp = false);
 static void callFunction(String &options);
 
 // For globais
@@ -498,36 +498,36 @@ static int8_t addGlobal(const char *name, void *pointer, uint8_t type, uint8_t s
 static int8_t addGlobal(const __FlashStringHelper *name, void *pointer, uint8_t type, uint8_t showLength);
 
 static void processGlobals(String &options);
-static int8_t showGlobals(String &options, boolean one, boolean debugSerialApp = false);
-static boolean showGlobal(uint8_t globalNum, debugEnumShowGlobais_t mode, boolean getLastNameF);
+static int8_t showGlobals(String &options, bool one, bool debugSerialApp = false);
+static bool showGlobal(uint8_t globalNum, debugEnumShowGlobais_t mode, bool getLastNameF);
 static void changeGlobal(Fields &fields);
 
-static boolean findGlobal(const char *globalName, uint8_t *globalNum, boolean sumOne = true);
+static bool findGlobal(const char *globalName, uint8_t *globalNum, bool sumOne = true);
 #ifndef BOARD_LOW_MEMORY // Not for low memory boards
-static boolean verifyGlobalType(uint8_t globalNum, uint8_t type);
+static bool verifyGlobalType(uint8_t globalNum, uint8_t type);
 #endif
 
-static void removeQuotation(String &string, boolean single);
+static void removeQuotation(String &string, bool single);
 
 // For void* pointerValue values
 
-static void getStrValue(uint8_t type, void *pointer, uint8_t showLength, boolean showSize, String &response, String &responseType);
+static void getStrValue(uint8_t type, void *pointer, uint8_t showLength, bool showSize, String &response, String &responseType);
 static void updateValue(uint8_t typeFrom, void *pointerFrom, uint8_t typeTo, void **pointerTo);
-static boolean apllyOperation(uint8_t type1, void *pointer1, uint8_t operation, uint8_t type2, void *pointer2);
+static bool apllyOperation(uint8_t type1, void *pointer1, uint8_t operation, uint8_t type2, void *pointer2);
 
 #ifndef BOARD_LOW_MEMORY // Not for low memory boards
 
 // For watches
 
-static int8_t addWatch(uint8_t globalNum, uint8_t operation, boolean allwaysStop);
+static int8_t addWatch(uint8_t globalNum, uint8_t operation, bool allwaysStop);
 
 static void processWatches(String &options);
 static void processWatchesAction(Fields &fields);
-static int8_t showWatches(String &options, boolean debugSerialApp = false);
-static boolean showWatch(uint8_t watchNum, boolean debugSerialApp = false);
+static int8_t showWatches(String &options, bool debugSerialApp = false);
+static bool showWatch(uint8_t watchNum, bool debugSerialApp = false);
 static int8_t addWatchCross(Fields &fields);
-static boolean changeWatch(Fields &fields);
-static boolean getWatchOperation(String str, uint8_t *operation);
+static bool changeWatch(Fields &fields);
+static bool getWatchOperation(String str, uint8_t *operation);
 
 #endif
 
@@ -791,7 +791,7 @@ void debugSetLevel(uint8_t level)
 
 // Silence
 
-void debugSilence(boolean activate, boolean showMessage, boolean fromBreak)
+void debugSilence(bool activate, bool showMessage, bool fromBreak)
 {
 
 	_debugSilence = activate;
@@ -911,7 +911,7 @@ void printSerialDebug()
 // SerialDebug handle, to process data receipts, handles and events
 // Note: In ESP32 not used task for it, to avoid mixed serial outputs
 
-void debugHandleEvent(boolean calledByHandleEvent)
+void debugHandleEvent(bool calledByHandleEvent)
 {
 
 	// D("handle");
@@ -1031,7 +1031,7 @@ void debugHandleEvent(boolean calledByHandleEvent)
 
 // Profiler
 
-void debugSetProfiler(boolean activate)
+void debugSetProfiler(bool activate)
 {
 
 	_debugShowProfiler = activate;
@@ -1041,7 +1041,7 @@ void debugSetProfiler(boolean activate)
 
 // Profiler
 
-void debugShowProfiler(boolean activate, uint16_t minTime, boolean showMessage)
+void debugShowProfiler(bool activate, uint16_t minTime, bool showMessage)
 {
 
 	_debugShowProfiler = activate;
@@ -1088,7 +1088,7 @@ void debugShowProfiler(boolean activate, uint16_t minTime, boolean showMessage)
 
 #ifndef DEBUG_USE_NATIVE_PRINTF // Not for native Serial.printf
 
-void debugPrintf(boolean newline, const char level, const char *function, const char *format, ...)
+void debugPrintf(bool newline, const char level, const char *function, const char *format, ...)
 {
 
 	// Buffer
@@ -1190,7 +1190,7 @@ void debugPrintf(boolean newline, const char level, const char *function, const 
 	return;
 }
 
-void debugPrintf(boolean newline, const char level, const char *function, const __FlashStringHelper *format, ...)
+void debugPrintf(bool newline, const char level, const char *function, const __FlashStringHelper *format, ...)
 {
 
 	// For Flash string variables
@@ -1312,13 +1312,13 @@ String debugBreak()
 
 	return debugBreak("", DEBUG_BREAK_TIMEOUT, false);
 }
-String debugBreak(const __FlashStringHelper *ifsh, uint32_t timeout, boolean byWatch)
+String debugBreak(const __FlashStringHelper *ifsh, uint32_t timeout, bool byWatch)
 {
 
 	return debugBreak(String(ifsh).c_str(), timeout, byWatch);
 }
 
-String debugBreak(const char *str, uint32_t timeout, boolean byWatch)
+String debugBreak(const char *str, uint32_t timeout, bool byWatch)
 {
 
 	// D("debugBreak - timeout %u", timeout);
@@ -1356,7 +1356,7 @@ String debugBreak(const char *str, uint32_t timeout, boolean byWatch)
 
 	// Enter in silence (if is not yet)
 
-	boolean oldSilence = _debugSilence; // In silence mode ?
+	bool oldSilence = _debugSilence; // In silence mode ?
 
 	if (!_debugSilence)
 	{
@@ -1443,7 +1443,7 @@ String debugBreak(const char *str, uint32_t timeout, boolean byWatch)
 
 // Process command receipt by serial (Arduino monitor, etc.)
 
-static void processCommand(String &command, boolean repeating, boolean showError)
+static void processCommand(String &command, bool repeating, bool showError)
 {
 
 	// Reduce information on error to support low memory boards
@@ -1470,7 +1470,7 @@ static void processCommand(String &command, boolean repeating, boolean showError
 
 	// Can repeat ?
 
-	boolean canRepeat = false;
+	bool canRepeat = false;
 
 	// Extract options
 
@@ -1508,7 +1508,7 @@ static void processCommand(String &command, boolean repeating, boolean showError
 
 	// Verify if pass value between '"' - to avoid split the value in fields logic
 
-	boolean inMark = false;
+	bool inMark = false;
 	char conv = 31;
 
 	for (uint8_t i = 0; i < options.length(); i++)
@@ -1652,7 +1652,7 @@ static void processCommand(String &command, boolean repeating, boolean showError
 
 		// Enable/disable the Simple Software Debugger
 
-		boolean saveWatchStop = _debugWatchStop;
+		bool saveWatchStop = _debugWatchStop;
 
 		if (_debugSerialApp)
 		{ // For DebugSerialApp connection ?
@@ -2148,7 +2148,7 @@ static void debugSerialAppConnection()
 
 // Handle for debugger
 
-void debugHandleDebugger(boolean calledByHandleEvent)
+void debugHandleDebugger(bool calledByHandleEvent)
 {
 
 	// Time measure - give commented
@@ -2171,10 +2171,10 @@ void debugHandleDebugger(boolean calledByHandleEvent)
 
 #ifdef BOARD_ENOUGH_MEMORY // Modern and faster board ?
 
-		boolean process = _debugSerialApp; // Always process for app
+		bool process = _debugSerialApp; // Always process for app
 
 #else
-		boolean process = _debugSerialApp && calledByHandleEvent; // false;
+		bool process = _debugSerialApp && calledByHandleEvent; // false;
 #endif
 		debugGlobal_t *global = &_debugGlobals[g];
 
@@ -2222,9 +2222,9 @@ void debugHandleDebugger(boolean calledByHandleEvent)
 
 			// Value changed ?
 
-			boolean changed = apllyOperation(global->type, global->pointer,
-											 DEBUG_WATCH_DIFF,
-											 global->typeOld, global->pointerOld);
+			bool changed = apllyOperation(global->type, global->pointer,
+										  DEBUG_WATCH_DIFF,
+										  global->typeOld, global->pointerOld);
 
 			// D("global %u %s type %u type old %u chg %d %d", g, global->name, global->type, global->typeOld, changed, global->changed);
 
@@ -2277,7 +2277,7 @@ void debugHandleDebugger(boolean calledByHandleEvent)
 
 	// Break ?
 
-	boolean hasBreak = false;
+	bool hasBreak = false;
 
 #ifndef BOARD_LOW_MEMORY // Not for low memory boards
 
@@ -2287,7 +2287,7 @@ void debugHandleDebugger(boolean calledByHandleEvent)
 	{
 
 		uint8_t totTriggered = 0;
-		boolean alwaysStop = false;
+		bool alwaysStop = false;
 
 		for (uint8_t w = 0; w < _debugWatchesAdded; w++)
 		{
@@ -2301,7 +2301,7 @@ void debugHandleDebugger(boolean calledByHandleEvent)
 			if (watch->enabled && (global->updateOldValue || watch->watchCross || watch->operation == DEBUG_WATCH_CHANGED))
 			{
 
-				boolean triggered = false;
+				bool triggered = false;
 
 				// When changed type
 
@@ -2560,10 +2560,10 @@ void debugSetLastFunctionDescription(const __FlashStringHelper *description)
 
 #ifndef BOARD_LOW_MEMORY // Not for low memory boards
 
-int8_t debugAddGlobalBoolean(const char *name, boolean *pointer)
+int8_t debugAddGlobalBool(const char *name, bool *pointer)
 {
 
-	return addGlobal(name, pointer, DEBUG_TYPE_BOOLEAN, 0);
+	return addGlobal(name, pointer, DEBUG_TYPE_BOOL, 0);
 }
 int8_t debugAddGlobalChar(const char *name, char *pointer)
 {
@@ -2680,10 +2680,10 @@ int8_t debugAddGlobalString(const char *name, String *pointer, uint8_t showLengt
 
 // Basic types
 
-int8_t debugAddGlobalBoolean(const __FlashStringHelper *name, boolean *pointer)
+int8_t debugAddGlobalBool(const __FlashStringHelper *name, bool *pointer)
 {
 
-	return addGlobal(name, pointer, DEBUG_TYPE_BOOLEAN, 0);
+	return addGlobal(name, pointer, DEBUG_TYPE_BOOL, 0);
 }
 int8_t debugAddGlobalChar(const __FlashStringHelper *name, char *pointer)
 {
@@ -2828,14 +2828,14 @@ void debugSetLastGlobalDescription(const __FlashStringHelper *description)
 
 // Add a watch
 
-int8_t debugAddWatchBoolean(const char *globalName, uint8_t operation, boolean value, boolean allwaysStop)
+int8_t debugAddWatchBool(const char *globalName, uint8_t operation, bool value, bool allwaysStop)
 {
 
 	uint8_t globalNum;
 
 	if (findGlobal(globalName, &globalNum))
 	{
-		return debugAddWatchBoolean(globalNum, operation, value, allwaysStop);
+		return debugAddWatchBool(globalNum, operation, value, allwaysStop);
 	}
 	else
 	{
@@ -2843,7 +2843,7 @@ int8_t debugAddWatchBoolean(const char *globalName, uint8_t operation, boolean v
 	}
 }
 
-int8_t debugAddWatchBoolean(uint8_t globalNum, uint8_t operation, boolean value, boolean allwaysStop)
+int8_t debugAddWatchBool(uint8_t globalNum, uint8_t operation, bool value, bool allwaysStop)
 {
 
 	// Check Operation
@@ -2851,13 +2851,13 @@ int8_t debugAddWatchBoolean(uint8_t globalNum, uint8_t operation, boolean value,
 	if (operation == DEBUG_WATCH_LESS_EQ || operation == DEBUG_WATCH_GREAT_EQ)
 	{
 		printSerialDebug();
-		Serial.println(F("Operation not allowed for boolean"));
+		Serial.println(F("Operation not allowed for bool"));
 		return -1;
 	}
 
 	// Verify global type
 
-	if (!verifyGlobalType(globalNum, DEBUG_TYPE_BOOLEAN))
+	if (!verifyGlobalType(globalNum, DEBUG_TYPE_BOOL))
 	{
 		return -1;
 	}
@@ -2870,7 +2870,7 @@ int8_t debugAddWatchBoolean(uint8_t globalNum, uint8_t operation, boolean value,
 	{
 
 		// Alloc memory for pointerValue and copy value
-		size_t size = sizeof(boolean);
+		size_t size = sizeof(bool);
 		_debugWatches[ret].pointerValue = malloc(size);
 		memcpy(_debugWatches[ret].pointerValue, &value, size);
 	}
@@ -2878,7 +2878,7 @@ int8_t debugAddWatchBoolean(uint8_t globalNum, uint8_t operation, boolean value,
 	return ret;
 }
 
-int8_t debugAddWatchChar(const char *globalName, uint8_t operation, char value, boolean allwaysStop)
+int8_t debugAddWatchChar(const char *globalName, uint8_t operation, char value, bool allwaysStop)
 {
 
 	uint8_t globalNum;
@@ -2892,7 +2892,7 @@ int8_t debugAddWatchChar(const char *globalName, uint8_t operation, char value, 
 		return -1;
 	}
 }
-int8_t debugAddWatchChar(uint8_t globalNum, uint8_t operation, char value, boolean allwaysStop)
+int8_t debugAddWatchChar(uint8_t globalNum, uint8_t operation, char value, bool allwaysStop)
 {
 
 	// Verify global type
@@ -2916,7 +2916,7 @@ int8_t debugAddWatchChar(uint8_t globalNum, uint8_t operation, char value, boole
 	return ret;
 }
 
-int8_t debugAddWatchByte(const char *globalName, uint8_t operation, uint8_t value, boolean allwaysStop)
+int8_t debugAddWatchByte(const char *globalName, uint8_t operation, uint8_t value, bool allwaysStop)
 {
 
 	uint8_t globalNum;
@@ -2931,7 +2931,7 @@ int8_t debugAddWatchByte(const char *globalName, uint8_t operation, uint8_t valu
 	}
 }
 
-int8_t debugAddWatchByte(uint8_t globalNum, uint8_t operation, uint8_t value, boolean allwaysStop)
+int8_t debugAddWatchByte(uint8_t globalNum, uint8_t operation, uint8_t value, bool allwaysStop)
 {
 
 	// Verify global type
@@ -2955,7 +2955,7 @@ int8_t debugAddWatchByte(uint8_t globalNum, uint8_t operation, uint8_t value, bo
 	return ret;
 }
 
-int8_t debugAddWatchInt(const char *globalName, uint8_t operation, int value, boolean allwaysStop)
+int8_t debugAddWatchInt(const char *globalName, uint8_t operation, int value, bool allwaysStop)
 {
 
 	uint8_t globalNum;
@@ -2969,7 +2969,7 @@ int8_t debugAddWatchInt(const char *globalName, uint8_t operation, int value, bo
 		return -1;
 	}
 }
-int8_t debugAddWatchInt(uint8_t globalNum, uint8_t operation, int value, boolean allwaysStop)
+int8_t debugAddWatchInt(uint8_t globalNum, uint8_t operation, int value, bool allwaysStop)
 {
 
 	// Verify global type
@@ -2993,7 +2993,7 @@ int8_t debugAddWatchInt(uint8_t globalNum, uint8_t operation, int value, boolean
 	return ret;
 }
 
-int8_t debugAddWatchUInt(const char *globalName, uint8_t operation, unsigned int value, boolean allwaysStop)
+int8_t debugAddWatchUInt(const char *globalName, uint8_t operation, unsigned int value, bool allwaysStop)
 {
 
 	uint8_t globalNum;
@@ -3007,7 +3007,7 @@ int8_t debugAddWatchUInt(const char *globalName, uint8_t operation, unsigned int
 		return -1;
 	}
 }
-int8_t debugAddWatchUInt(uint8_t globalNum, uint8_t operation, unsigned int value, boolean allwaysStop)
+int8_t debugAddWatchUInt(uint8_t globalNum, uint8_t operation, unsigned int value, bool allwaysStop)
 {
 
 	// Verify global type
@@ -3031,7 +3031,7 @@ int8_t debugAddWatchUInt(uint8_t globalNum, uint8_t operation, unsigned int valu
 	return ret;
 }
 
-int8_t debugAddWatchLong(const char *globalName, uint8_t operation, long value, boolean allwaysStop)
+int8_t debugAddWatchLong(const char *globalName, uint8_t operation, long value, bool allwaysStop)
 {
 
 	uint8_t globalNum;
@@ -3045,7 +3045,7 @@ int8_t debugAddWatchLong(const char *globalName, uint8_t operation, long value, 
 		return -1;
 	}
 }
-int8_t debugAddWatchLong(uint8_t globalNum, uint8_t operation, long value, boolean allwaysStop)
+int8_t debugAddWatchLong(uint8_t globalNum, uint8_t operation, long value, bool allwaysStop)
 {
 
 	// Verify global type
@@ -3069,7 +3069,7 @@ int8_t debugAddWatchLong(uint8_t globalNum, uint8_t operation, long value, boole
 	return ret;
 }
 
-int8_t debugAddWatchULong(const char *globalName, uint8_t operation, unsigned long value, boolean allwaysStop)
+int8_t debugAddWatchULong(const char *globalName, uint8_t operation, unsigned long value, bool allwaysStop)
 {
 
 	uint8_t globalNum;
@@ -3083,7 +3083,7 @@ int8_t debugAddWatchULong(const char *globalName, uint8_t operation, unsigned lo
 		return -1;
 	}
 }
-int8_t debugAddWatchULong(uint8_t globalNum, uint8_t operation, unsigned long value, boolean allwaysStop)
+int8_t debugAddWatchULong(uint8_t globalNum, uint8_t operation, unsigned long value, bool allwaysStop)
 {
 
 	// Verify global type
@@ -3107,7 +3107,7 @@ int8_t debugAddWatchULong(uint8_t globalNum, uint8_t operation, unsigned long va
 	return ret;
 }
 
-int8_t debugAddWatchFloat(const char *globalName, uint8_t operation, float value, boolean allwaysStop)
+int8_t debugAddWatchFloat(const char *globalName, uint8_t operation, float value, bool allwaysStop)
 {
 
 	uint8_t globalNum;
@@ -3121,7 +3121,7 @@ int8_t debugAddWatchFloat(const char *globalName, uint8_t operation, float value
 		return -1;
 	}
 }
-int8_t debugAddWatchFloat(uint8_t globalNum, uint8_t operation, float value, boolean allwaysStop)
+int8_t debugAddWatchFloat(uint8_t globalNum, uint8_t operation, float value, bool allwaysStop)
 {
 
 	// Verify global type
@@ -3145,7 +3145,7 @@ int8_t debugAddWatchFloat(uint8_t globalNum, uint8_t operation, float value, boo
 	return ret;
 }
 
-int8_t debugAddWatchDouble(const char *globalName, uint8_t operation, double value, boolean allwaysStop)
+int8_t debugAddWatchDouble(const char *globalName, uint8_t operation, double value, bool allwaysStop)
 {
 
 	uint8_t globalNum;
@@ -3159,7 +3159,7 @@ int8_t debugAddWatchDouble(const char *globalName, uint8_t operation, double val
 		return -1;
 	}
 }
-int8_t debugAddWatchDouble(uint8_t globalNum, uint8_t operation, double value, boolean allwaysStop)
+int8_t debugAddWatchDouble(uint8_t globalNum, uint8_t operation, double value, bool allwaysStop)
 {
 
 	// Verify global type
@@ -3183,7 +3183,7 @@ int8_t debugAddWatchDouble(uint8_t globalNum, uint8_t operation, double value, b
 	return ret;
 }
 
-int8_t debugAddWatchInt8_t(const char *globalName, uint8_t operation, int8_t value, boolean allwaysStop)
+int8_t debugAddWatchInt8_t(const char *globalName, uint8_t operation, int8_t value, bool allwaysStop)
 {
 
 	uint8_t globalNum;
@@ -3197,7 +3197,7 @@ int8_t debugAddWatchInt8_t(const char *globalName, uint8_t operation, int8_t val
 		return -1;
 	}
 }
-int8_t debugAddWatchInt8_t(uint8_t globalNum, uint8_t operation, int8_t value, boolean allwaysStop)
+int8_t debugAddWatchInt8_t(uint8_t globalNum, uint8_t operation, int8_t value, bool allwaysStop)
 {
 
 	// Verify global type
@@ -3221,7 +3221,7 @@ int8_t debugAddWatchInt8_t(uint8_t globalNum, uint8_t operation, int8_t value, b
 	return ret;
 }
 
-int8_t debugAddWatchInt16_t(const char *globalName, uint8_t operation, int16_t value, boolean allwaysStop)
+int8_t debugAddWatchInt16_t(const char *globalName, uint8_t operation, int16_t value, bool allwaysStop)
 {
 
 	uint8_t globalNum;
@@ -3235,7 +3235,7 @@ int8_t debugAddWatchInt16_t(const char *globalName, uint8_t operation, int16_t v
 		return -1;
 	}
 }
-int8_t debugAddWatchInt16_t(uint8_t globalNum, uint8_t operation, int16_t value, boolean allwaysStop)
+int8_t debugAddWatchInt16_t(uint8_t globalNum, uint8_t operation, int16_t value, bool allwaysStop)
 {
 
 	// Verify global type
@@ -3259,7 +3259,7 @@ int8_t debugAddWatchInt16_t(uint8_t globalNum, uint8_t operation, int16_t value,
 	return ret;
 }
 
-int8_t debugAddWatchInt32_t(const char *globalName, uint8_t operation, int32_t value, boolean allwaysStop)
+int8_t debugAddWatchInt32_t(const char *globalName, uint8_t operation, int32_t value, bool allwaysStop)
 {
 
 	uint8_t globalNum;
@@ -3273,7 +3273,7 @@ int8_t debugAddWatchInt32_t(const char *globalName, uint8_t operation, int32_t v
 		return -1;
 	}
 }
-int8_t debugAddWatchInt32_t(uint8_t globalNum, uint8_t operation, int32_t value, boolean allwaysStop)
+int8_t debugAddWatchInt32_t(uint8_t globalNum, uint8_t operation, int32_t value, bool allwaysStop)
 {
 
 	// Verify global type
@@ -3301,7 +3301,7 @@ int8_t debugAddWatchInt32_t(uint8_t globalNum, uint8_t operation, int32_t value,
 // int8_t debugAddWatchInt64_t (uint8_t globalNum, uint8_t operation, int64_t value);
 // #endif
 
-int8_t debugAddWatchUInt8_t(const char *globalName, uint8_t operation, uint8_t value, boolean allwaysStop)
+int8_t debugAddWatchUInt8_t(const char *globalName, uint8_t operation, uint8_t value, bool allwaysStop)
 {
 
 	uint8_t globalNum;
@@ -3316,7 +3316,7 @@ int8_t debugAddWatchUInt8_t(const char *globalName, uint8_t operation, uint8_t v
 		return -1;
 	}
 }
-int8_t debugAddWatchUInt8_t(uint8_t globalNum, uint8_t operation, uint8_t value, boolean allwaysStop)
+int8_t debugAddWatchUInt8_t(uint8_t globalNum, uint8_t operation, uint8_t value, bool allwaysStop)
 {
 
 	// Verify global type
@@ -3350,7 +3350,7 @@ int8_t debugAddWatchUInt8_t(uint8_t globalNum, uint8_t operation, uint8_t value,
 	return ret;
 }
 
-int8_t debugAddWatchUInt16_t(const char *globalName, uint8_t operation, uint16_t value, boolean allwaysStop)
+int8_t debugAddWatchUInt16_t(const char *globalName, uint8_t operation, uint16_t value, bool allwaysStop)
 {
 
 	uint8_t globalNum;
@@ -3364,7 +3364,7 @@ int8_t debugAddWatchUInt16_t(const char *globalName, uint8_t operation, uint16_t
 		return -1;
 	}
 }
-int8_t debugAddWatchUInt16_t(uint8_t globalNum, uint8_t operation, uint16_t value, boolean allwaysStop)
+int8_t debugAddWatchUInt16_t(uint8_t globalNum, uint8_t operation, uint16_t value, bool allwaysStop)
 {
 
 	// Verify global type
@@ -3388,7 +3388,7 @@ int8_t debugAddWatchUInt16_t(uint8_t globalNum, uint8_t operation, uint16_t valu
 	return ret;
 }
 
-int8_t debugAddWatchUInt32_t(const char *globalName, uint8_t operation, uint32_t value, boolean allwaysStop)
+int8_t debugAddWatchUInt32_t(const char *globalName, uint8_t operation, uint32_t value, bool allwaysStop)
 {
 
 	uint8_t globalNum;
@@ -3402,7 +3402,7 @@ int8_t debugAddWatchUInt32_t(const char *globalName, uint8_t operation, uint32_t
 		return -1;
 	}
 }
-int8_t debugAddWatchUInt32_t(uint8_t globalNum, uint8_t operation, uint32_t value, boolean allwaysStop)
+int8_t debugAddWatchUInt32_t(uint8_t globalNum, uint8_t operation, uint32_t value, bool allwaysStop)
 {
 
 	// Verify global type
@@ -3430,7 +3430,7 @@ int8_t debugAddWatchUInt32_t(uint8_t globalNum, uint8_t operation, uint32_t valu
 // int8_t debugAddWatchUInt64_t (uint8_t globalNum, uint8_t operation, uint64_t value);
 // #endif
 
-int8_t debugAddWatchCharArray(const char *globalName, uint8_t operation, const char *value, boolean allwaysStop)
+int8_t debugAddWatchCharArray(const char *globalName, uint8_t operation, const char *value, bool allwaysStop)
 {
 
 	uint8_t globalNum;
@@ -3445,7 +3445,7 @@ int8_t debugAddWatchCharArray(const char *globalName, uint8_t operation, const c
 	}
 }
 
-int8_t debugAddWatchCharArray(uint8_t globalNum, uint8_t operation, const char *value, boolean allwaysStop)
+int8_t debugAddWatchCharArray(uint8_t globalNum, uint8_t operation, const char *value, bool allwaysStop)
 {
 
 	// Verify global type
@@ -3469,7 +3469,7 @@ int8_t debugAddWatchCharArray(uint8_t globalNum, uint8_t operation, const char *
 	return ret;
 }
 
-int8_t debugAddWatchString(const char *globalName, uint8_t operation, String value, boolean allwaysStop)
+int8_t debugAddWatchString(const char *globalName, uint8_t operation, String value, bool allwaysStop)
 {
 
 	uint8_t globalNum;
@@ -3483,7 +3483,7 @@ int8_t debugAddWatchString(const char *globalName, uint8_t operation, String val
 		return -1;
 	}
 }
-int8_t debugAddWatchString(uint8_t globalNum, uint8_t operation, String value, boolean allwaysStop)
+int8_t debugAddWatchString(uint8_t globalNum, uint8_t operation, String value, bool allwaysStop)
 {
 
 	// Verify global type
@@ -3511,7 +3511,7 @@ int8_t debugAddWatchString(uint8_t globalNum, uint8_t operation, String value, b
 
 // For watches cross - between 2 globals
 
-int8_t debugAddWatchCross(const char *globalName, uint8_t operation, const char *anotherGlobalName, boolean allwaysStop)
+int8_t debugAddWatchCross(const char *globalName, uint8_t operation, const char *anotherGlobalName, bool allwaysStop)
 {
 
 	uint8_t globalNum;
@@ -3530,7 +3530,7 @@ int8_t debugAddWatchCross(const char *globalName, uint8_t operation, const char 
 
 	return debugAddWatchCross(globalNum, operation, anotherGlobalNum, allwaysStop);
 }
-int8_t debugAddWatchCross(uint8_t globalNum, uint8_t operation, uint8_t anotherGlobalNum, boolean allwaysStop)
+int8_t debugAddWatchCross(uint8_t globalNum, uint8_t operation, uint8_t anotherGlobalNum, bool allwaysStop)
 {
 
 	int8_t ret = -1;
@@ -3604,111 +3604,111 @@ int8_t debugAddWatchCross(uint8_t globalNum, uint8_t operation, uint8_t anotherG
 
 // For Flash F
 
-int8_t debugAddWatchBoolean(const __FlashStringHelper *globalName, uint8_t operation, boolean value, boolean allwaysStop)
+int8_t debugAddWatchBool(const __FlashStringHelper *globalName, uint8_t operation, bool value, bool allwaysStop)
 {
 
 	String name = String(globalName);
-	return debugAddWatchBoolean(name.c_str(), operation, value, allwaysStop);
+	return debugAddWatchBool(name.c_str(), operation, value, allwaysStop);
 }
-int8_t debugAddWatchChar(const __FlashStringHelper *globalName, uint8_t operation, char value, boolean allwaysStop)
+int8_t debugAddWatchChar(const __FlashStringHelper *globalName, uint8_t operation, char value, bool allwaysStop)
 {
 
 	String name = String(globalName);
 	return debugAddWatchChar(name.c_str(), operation, value, allwaysStop);
 }
-int8_t debugAddWatchByte(const __FlashStringHelper *globalName, uint8_t operation, uint8_t value, boolean allwaysStop)
+int8_t debugAddWatchByte(const __FlashStringHelper *globalName, uint8_t operation, uint8_t value, bool allwaysStop)
 {
 
 	String name = String(globalName);
 	return debugAddWatchByte(name.c_str(), operation, value, allwaysStop);
 }
-int8_t debugAddWatchInt(const __FlashStringHelper *globalName, uint8_t operation, int value, boolean allwaysStop)
+int8_t debugAddWatchInt(const __FlashStringHelper *globalName, uint8_t operation, int value, bool allwaysStop)
 {
 
 	String name = String(globalName);
 	return debugAddWatchInt(name.c_str(), operation, value, allwaysStop);
 }
-int8_t debugAddWatchUInt(const __FlashStringHelper *globalName, uint8_t operation, unsigned int value, boolean allwaysStop)
+int8_t debugAddWatchUInt(const __FlashStringHelper *globalName, uint8_t operation, unsigned int value, bool allwaysStop)
 {
 
 	String name = String(globalName);
 	return debugAddWatchUInt(name.c_str(), operation, value, allwaysStop);
 }
-int8_t debugAddWatchLong(const __FlashStringHelper *globalName, uint8_t operation, long value, boolean allwaysStop)
+int8_t debugAddWatchLong(const __FlashStringHelper *globalName, uint8_t operation, long value, bool allwaysStop)
 {
 
 	String name = String(globalName);
 	return debugAddWatchLong(name.c_str(), operation, value, allwaysStop);
 }
-int8_t debugAddWatchULong(const __FlashStringHelper *globalName, uint8_t operation, unsigned long value, boolean allwaysStop)
+int8_t debugAddWatchULong(const __FlashStringHelper *globalName, uint8_t operation, unsigned long value, bool allwaysStop)
 {
 
 	String name = String(globalName);
 	return debugAddWatchULong(name.c_str(), operation, value, allwaysStop);
 }
-int8_t debugAddWatchFloat(const __FlashStringHelper *globalName, uint8_t operation, float value, boolean allwaysStop)
+int8_t debugAddWatchFloat(const __FlashStringHelper *globalName, uint8_t operation, float value, bool allwaysStop)
 {
 
 	String name = String(globalName);
 	return debugAddWatchFloat(name.c_str(), operation, value, allwaysStop);
 }
-int8_t debugAddWatchDouble(const __FlashStringHelper *globalName, uint8_t operation, double value, boolean allwaysStop)
+int8_t debugAddWatchDouble(const __FlashStringHelper *globalName, uint8_t operation, double value, bool allwaysStop)
 {
 
 	String name = String(globalName);
 	return debugAddWatchDouble(name.c_str(), operation, value, allwaysStop);
 }
-int8_t debugAddWatchInt8_t(const __FlashStringHelper *globalName, uint8_t operation, int8_t value, boolean allwaysStop)
+int8_t debugAddWatchInt8_t(const __FlashStringHelper *globalName, uint8_t operation, int8_t value, bool allwaysStop)
 {
 
 	String name = String(globalName);
 	return debugAddWatchInt8_t(name.c_str(), operation, value, allwaysStop);
 }
-int8_t debugAddWatchInt16_t(const __FlashStringHelper *globalName, uint8_t operation, int16_t value, boolean allwaysStop)
+int8_t debugAddWatchInt16_t(const __FlashStringHelper *globalName, uint8_t operation, int16_t value, bool allwaysStop)
 {
 
 	String name = String(globalName);
 	return debugAddWatchInt16_t(name.c_str(), operation, value, allwaysStop);
 }
-int8_t debugAddWatchInt32_t(const __FlashStringHelper *globalName, uint8_t operation, int32_t value, boolean allwaysStop)
+int8_t debugAddWatchInt32_t(const __FlashStringHelper *globalName, uint8_t operation, int32_t value, bool allwaysStop)
 {
 
 	String name = String(globalName);
 	return debugAddWatchInt32_t(name.c_str(), operation, value, allwaysStop);
 }
-int8_t debugAddWatchUInt8_t(const __FlashStringHelper *globalName, uint8_t operation, uint8_t value, boolean allwaysStop)
+int8_t debugAddWatchUInt8_t(const __FlashStringHelper *globalName, uint8_t operation, uint8_t value, bool allwaysStop)
 {
 
 	String name = String(globalName);
 	return debugAddWatchUInt8_t(name.c_str(), operation, value, allwaysStop);
 }
-int8_t debugAddWatchUInt16_t(const __FlashStringHelper *globalName, uint8_t operation, uint16_t value, boolean allwaysStop)
+int8_t debugAddWatchUInt16_t(const __FlashStringHelper *globalName, uint8_t operation, uint16_t value, bool allwaysStop)
 {
 
 	String name = String(globalName);
 	return debugAddWatchUInt16_t(name.c_str(), operation, value, allwaysStop);
 }
-int8_t debugAddWatchUInt32_t(const __FlashStringHelper *globalName, uint8_t operation, uint32_t value, boolean allwaysStop)
+int8_t debugAddWatchUInt32_t(const __FlashStringHelper *globalName, uint8_t operation, uint32_t value, bool allwaysStop)
 {
 
 	String name = String(globalName);
 	return debugAddWatchUInt32_t(name.c_str(), operation, value, allwaysStop);
 }
 
-int8_t debugAddWatchCharArray(const __FlashStringHelper *globalName, uint8_t operation, const char *value, boolean allwaysStop)
+int8_t debugAddWatchCharArray(const __FlashStringHelper *globalName, uint8_t operation, const char *value, bool allwaysStop)
 {
 
 	String name = String(globalName);
 	return debugAddWatchCharArray(name.c_str(), operation, value, allwaysStop);
 }
-int8_t debugAddWatchString(const __FlashStringHelper *globalName, uint8_t operation, String value, boolean allwaysStop)
+int8_t debugAddWatchString(const __FlashStringHelper *globalName, uint8_t operation, String value, bool allwaysStop)
 {
 
 	String name = String(globalName);
 	return debugAddWatchString(name.c_str(), operation, value, allwaysStop);
 }
 
-int8_t debugAddWatchCross(const __FlashStringHelper *globalName, uint8_t operation, const __FlashStringHelper *anotherGlobalName, boolean allwaysStop)
+int8_t debugAddWatchCross(const __FlashStringHelper *globalName, uint8_t operation, const __FlashStringHelper *anotherGlobalName, bool allwaysStop)
 {
 
 	String name = String(globalName);
@@ -3874,7 +3874,7 @@ static int8_t addGlobal(const __FlashStringHelper *name, void *pointer, uint8_t 
 
 // For watches
 
-static int8_t addWatch(uint8_t globalNum, uint8_t operation, boolean allwaysStop)
+static int8_t addWatch(uint8_t globalNum, uint8_t operation, bool allwaysStop)
 {
 
 	int8_t ret = -1;
@@ -4105,7 +4105,7 @@ static void processWatchesAction(Fields &fields)
 	String secondOption = fields.getString(2);
 
 	uint8_t watchNum = 0;
-	boolean all = false;
+	bool all = false;
 
 	// Process second option
 
@@ -4330,7 +4330,7 @@ static int8_t addWatch(Fields &fields)
 
 	pos++;
 
-	boolean allwaysStop = false;
+	bool allwaysStop = false;
 
 	if (fields.size() == pos)
 	{
@@ -4352,10 +4352,10 @@ static int8_t addWatch(Fields &fields)
 
 		switch (_debugGlobals[globalNum].type)
 		{
-		case DEBUG_TYPE_BOOLEAN:
+		case DEBUG_TYPE_BOOL:
 		{
-			boolean conv = (value == "1" || value == "t" || value == "true");
-			ret = debugAddWatchBoolean((globalNum + 1), operation, conv, allwaysStop);
+			bool conv = (value == "1" || value == "t" || value == "true");
+			ret = debugAddWatchBool((globalNum + 1), operation, conv, allwaysStop);
 		}
 		break;
 		case DEBUG_TYPE_INT:
@@ -4560,7 +4560,7 @@ static int8_t addWatchCross(Fields &fields)
 
 	pos++;
 
-	boolean allwaysStop = false;
+	bool allwaysStop = false;
 
 	if (fields.size() == pos)
 	{
@@ -4588,12 +4588,12 @@ static int8_t addWatchCross(Fields &fields)
 // Used to search and show all (return total showed)
 // Or to search and show one (return number showed)
 
-static int8_t showWatches(String &options, boolean debugSerialApp)
+static int8_t showWatches(String &options, bool debugSerialApp)
 {
 
 	// Show all ?
 
-	boolean showAll = false;
+	bool showAll = false;
 	int8_t byNumber = -1;
 
 	// Searching ?
@@ -4662,7 +4662,7 @@ static int8_t showWatches(String &options, boolean debugSerialApp)
 	{
 
 		String name = "";
-		boolean show = showAll;
+		bool show = showAll;
 
 		// Show ?
 
@@ -4701,7 +4701,7 @@ static int8_t showWatches(String &options, boolean debugSerialApp)
 	if (!debugSerialApp)
 	{ // Not for SerialDebugApp connection
 
-		boolean doBreak = false;
+		bool doBreak = false;
 
 		if (showed > 0)
 		{
@@ -4750,7 +4750,7 @@ static int8_t showWatches(String &options, boolean debugSerialApp)
 
 // Show watch
 
-static boolean showWatch(uint8_t watchNum, boolean debugSerialApp)
+static bool showWatch(uint8_t watchNum, bool debugSerialApp)
 {
 
 	if (watchNum >= _debugWatchesAdded)
@@ -4943,7 +4943,7 @@ static boolean showWatch(uint8_t watchNum, boolean debugSerialApp)
 
 // Change watches of global variables
 
-static boolean changeWatch(Fields &fields)
+static bool changeWatch(Fields &fields)
 {
 
 	uint8_t pos = 2; // Field possition
@@ -5072,7 +5072,7 @@ static boolean changeWatch(Fields &fields)
 
 	pos++;
 
-	boolean allwaysStop = false;
+	bool allwaysStop = false;
 
 	if (fields.size() == pos)
 	{
@@ -5107,9 +5107,9 @@ static boolean changeWatch(Fields &fields)
 
 		switch (_debugGlobals[globalNum].type)
 		{
-		case DEBUG_TYPE_BOOLEAN:
+		case DEBUG_TYPE_BOOL:
 		{
-			boolean conv = (value == "1" || value == "t" || value == "true");
+			bool conv = (value == "1" || value == "t" || value == "true");
 			updateValue(global->type, &conv, global->type, &(watch->pointerValue));
 		}
 		break;
@@ -5220,7 +5220,7 @@ static boolean changeWatch(Fields &fields)
 
 // Verify global type
 
-static boolean verifyGlobalType(uint8_t globalNum, uint8_t type)
+static bool verifyGlobalType(uint8_t globalNum, uint8_t type)
 {
 
 	if (globalNum == 0 || globalNum > _debugGlobalsAdded)
@@ -5231,7 +5231,7 @@ static boolean verifyGlobalType(uint8_t globalNum, uint8_t type)
 		return false;
 	}
 
-	boolean ret = (_debugGlobals[globalNum - 1].type == type);
+	bool ret = (_debugGlobals[globalNum - 1].type == type);
 
 	if (!ret)
 	{
@@ -5245,7 +5245,7 @@ static boolean verifyGlobalType(uint8_t globalNum, uint8_t type)
 
 // Get operation type for watch from string
 
-boolean getWatchOperation(String str, uint8_t *operation)
+bool getWatchOperation(String str, uint8_t *operation)
 {
 
 	int8_t oper = -1;
@@ -5294,7 +5294,7 @@ boolean getWatchOperation(String str, uint8_t *operation)
 
 // Aplly the operation between two *void pointers values
 
-static boolean apllyOperation(uint8_t type1, void *pointer1, uint8_t operation, uint8_t type2, void *pointer2)
+static bool apllyOperation(uint8_t type1, void *pointer1, uint8_t operation, uint8_t type2, void *pointer2)
 {
 
 	// Process types and values)
@@ -5308,10 +5308,10 @@ static boolean apllyOperation(uint8_t type1, void *pointer1, uint8_t operation, 
 		switch (type1)
 		{
 
-		case DEBUG_TYPE_BOOLEAN:
+		case DEBUG_TYPE_BOOL:
 		{
-			boolean value1 = *(boolean *)pointer1;
-			boolean value2 = *(boolean *)pointer2;
+			bool value1 = *(bool *)pointer1;
+			bool value2 = *(bool *)pointer2;
 
 			// Aplly operation
 
@@ -6067,7 +6067,7 @@ static boolean apllyOperation(uint8_t type1, void *pointer1, uint8_t operation, 
 
 // Find a global variable added by name
 
-static boolean findGlobal(const char *globalName, uint8_t *globalNum, boolean sumOne)
+static bool findGlobal(const char *globalName, uint8_t *globalNum, bool sumOne)
 {
 
 	String find = globalName;
@@ -6106,7 +6106,7 @@ static boolean findGlobal(const char *globalName, uint8_t *globalNum, boolean su
 
 // Get a string value from a void pointerValue
 
-static void getStrValue(uint8_t type, void *pointer, uint8_t showLength, boolean showSize, String &response, String &responseType)
+static void getStrValue(uint8_t type, void *pointer, uint8_t showLength, bool showSize, String &response, String &responseType)
 {
 
 	response = "";
@@ -6125,10 +6125,10 @@ static void getStrValue(uint8_t type, void *pointer, uint8_t showLength, boolean
 
 		// Basic types
 
-	case DEBUG_TYPE_BOOLEAN:
-		response = ((*(boolean *)pointer) ? F("true") : F("false"));
+	case DEBUG_TYPE_BOOL:
+		response = ((*(bool *)pointer) ? F("true") : F("false"));
 		if (responseType)
-			responseType = F("boolean");
+			responseType = F("bool");
 		break;
 	case DEBUG_TYPE_CHAR:
 		response = '\'';
@@ -6296,10 +6296,10 @@ static void updateValue(uint8_t typeFrom, void *pointerFrom, uint8_t typeTo, voi
 
 		// Basic types
 
-	case DEBUG_TYPE_BOOLEAN:
+	case DEBUG_TYPE_BOOL:
 	{
 		// Alloc memory for pointer (if need) and copy value
-		size_t size = sizeof(boolean);
+		size_t size = sizeof(bool);
 		if (!*pointerTo)
 		{
 			*pointerTo = malloc(size);
@@ -6603,13 +6603,13 @@ static void processFunctions(String &options)
 // Used to search and show all (return total showed)
 // Or to search and show one (return number of item showed)
 
-static int8_t showFunctions(String &options, boolean one, boolean debugSerialApp)
+static int8_t showFunctions(String &options, bool one, bool debugSerialApp)
 {
 
 	// Show all ?
 
-	boolean showAll = false;
-	boolean byStartName = false;
+	bool showAll = false;
+	bool byStartName = false;
 	int8_t byNumber = -1;
 
 	_debugString = "";
@@ -6709,7 +6709,7 @@ static int8_t showFunctions(String &options, boolean one, boolean debugSerialApp
 
 		String type = "";
 		String name = "";
-		boolean show = showAll;
+		bool show = showAll;
 
 		// Get name
 
@@ -6842,7 +6842,7 @@ static int8_t showFunctions(String &options, boolean one, boolean debugSerialApp
 	if (!debugSerialApp)
 	{
 
-		boolean doBreak = false;
+		bool doBreak = false;
 
 		if (!one && showed > 0)
 		{
@@ -7178,13 +7178,13 @@ static void processGlobals(String &options)
 // Used to search and show all (return total showed)
 // Or to search and show one (return number showed)
 
-static int8_t showGlobals(String &options, boolean one, boolean debugSerialApp)
+static int8_t showGlobals(String &options, bool one, bool debugSerialApp)
 {
 
 	// Show all ?
 
-	boolean showAll = false;
-	boolean byStartName = false;
+	bool showAll = false;
+	bool byStartName = false;
 	int8_t byNumber = -1;
 
 	// Searching ?
@@ -7272,7 +7272,7 @@ static int8_t showGlobals(String &options, boolean one, boolean debugSerialApp)
 	{
 
 		String name = "";
-		boolean show = showAll;
+		bool show = showAll;
 
 		// Get name
 
@@ -7384,7 +7384,7 @@ static int8_t showGlobals(String &options, boolean one, boolean debugSerialApp)
 	if (!debugSerialApp)
 	{ // Not for SerialDebugApp connection
 
-		boolean doBreak = false;
+		bool doBreak = false;
 
 		if (!one && showed > 0)
 		{
@@ -7436,7 +7436,7 @@ static int8_t showGlobals(String &options, boolean one, boolean debugSerialApp)
 
 // Show one global variable
 
-static boolean showGlobal(uint8_t globalNum, debugEnumShowGlobais_t mode, boolean getLastNameF)
+static bool showGlobal(uint8_t globalNum, debugEnumShowGlobais_t mode, bool getLastNameF)
 {
 
 	// Validate
@@ -7543,7 +7543,7 @@ static void changeGlobal(Fields &fields)
 
 	String globalId = fields.getString(1);
 	String value = fields.getString(3);
-	boolean noConfirm = (fields.size() == 4 && fields.getChar(4) == 'y');
+	bool noConfirm = (fields.size() == 4 && fields.getChar(4) == 'y');
 
 	String type = "";
 	String tolower = "";
@@ -7595,7 +7595,7 @@ static void changeGlobal(Fields &fields)
 
 		// Basic types
 
-	case DEBUG_TYPE_BOOLEAN:
+	case DEBUG_TYPE_BOOL:
 	{
 		if (value == "0" ||
 			tolower == "f" ||
@@ -7607,12 +7607,12 @@ static void changeGlobal(Fields &fields)
 
 			// Value ok
 
-			type = F("boolean");
+			type = F("bool");
 		}
 		else
 		{
 			printSerialDebug();
-			Serial.println(F("no boolean in value (0|1|false|true|f|t"));
+			Serial.println(F("no bool in value (0|1|false|true|f|t"));
 			return;
 		}
 	}
@@ -7824,10 +7824,10 @@ static void changeGlobal(Fields &fields)
 
 			// Basic types
 
-		case DEBUG_TYPE_BOOLEAN:
+		case DEBUG_TYPE_BOOL:
 		{
-			boolean change = (value == "1" || value[0] == 't');
-			*(boolean *)_debugGlobals[num].pointer = change;
+			bool change = (value == "1" || value[0] == 't');
+			*(bool *)_debugGlobals[num].pointer = change;
 			value = (change) ? F("true") : F("false");
 		}
 		break;
@@ -8008,7 +8008,7 @@ static void changeGlobal(Fields &fields)
 
 // Remove quotation marks from string
 
-static void removeQuotation(String &string, boolean single)
+static void removeQuotation(String &string, bool single)
 {
 
 	if (single)

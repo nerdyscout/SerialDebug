@@ -15,7 +15,7 @@ debugAddFunctionStr	KEYWORD2
 debugAddFunctionChar	KEYWORD2
 debugAddFunctionInt	KEYWORD2
 debugSetLastFunctionDescription	KEYWORD2
-debugAddGlobalBoolean	KEYWORD2
+debugAddGlobalBool	KEYWORD2
 debugAddGlobalChar	KEYWORD2
 debugAddGlobalByte	KEYWORD2
 debugAddGlobalInt	KEYWORD2
@@ -35,7 +35,7 @@ debugAddGlobalCharArray	KEYWORD2
 debugAddGlobalString	KEYWORD2
 debugAddGlobalString	KEYWORD2
 debugSetLastGlobalDescription	KEYWORD2
-debugAddWatchBoolean	KEYWORD2
+debugAddWatchBool	KEYWORD2
 debugAddWatchChar	KEYWORD2
 debugAddWatchByte	KEYWORD2
 debugAddWatchInt	KEYWORD2
@@ -52,7 +52,7 @@ debugAddWatchUInt16_t	KEYWORD2
 debugAddWatchUInt32_t	KEYWORD2
 debugAddWatchCharArray	KEYWORD2
 debugAddWatchString	KEYWORD2
-debugAddWatchBoolean	KEYWORD2
+debugAddWatchBool	KEYWORD2
 debugAddWatchChar	KEYWORD2
 debugAddWatchByte	KEYWORD2
 debugAddWatchInt	KEYWORD2

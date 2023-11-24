@@ -18,7 +18,7 @@
 
 // Is CR or LF ?
 
-boolean isCRLF(char character) {
+bool isCRLF(char character) {
 
 	return (character == '\r' || character == '\n');
 
@@ -26,7 +26,7 @@ boolean isCRLF(char character) {
 
 //String is numeric ?
 
-boolean strIsNum(String str) {
+bool strIsNum(String str) {
 
     bool isNum = false;
 

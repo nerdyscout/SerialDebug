@@ -12,11 +12,11 @@
 
 // Prototypes
 
-boolean isCRLF(char character);
+bool isCRLF(char character);
 
 //String is numeric ?
 
-boolean strIsNum(String str);
+bool strIsNum(String str);
 
 #endif /* UTIL_UTIL_H_ */
 

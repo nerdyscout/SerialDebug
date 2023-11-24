@@ -110,11 +110,11 @@ uint8_t mRunHours = 0;
 	#endif
 #endif
 
-boolean mLedON = false;
+bool mLedON = false;
 
 // Globals for this example
 
-boolean mBoolean = false;
+bool mBool = false;
 char mChar = 'X';
 uint8_t mByte = 'Y';
 int mInt = 1;
@@ -225,7 +225,7 @@ void setup() {
 
     // Note: easy way, no descriptions ....
 
-    debugAddGlobalBoolean("mBoolean", 	&mBoolean);
+    debugAddGlobalBool("mBool", 	&mBool);
     debugAddGlobalChar("mChar", 		&mChar);
     debugAddGlobalByte("mByte", 		&mByte);
     debugAddGlobalInt("mInt", 			&mInt);
@@ -261,9 +261,9 @@ void setup() {
     // Add watches for some global variables
     // Note: watches can be added/changed in serial monitor too
 
-	// Watch -> mBoolean when changed (put 0 on value)
+	// Watch -> mBool when changed (put 0 on value)
 
-	debugAddWatchBoolean("mBoolean", DEBUG_WATCH_CHANGED, 0);
+	debugAddWatchBool("mBool", DEBUG_WATCH_CHANGED, 0);
 
 	// Watch -> mRunSeconds == 10
 
@@ -318,7 +318,7 @@ void loop()
 			debugE("* This is a message of debug level ERROR");
 		}
 
-		mBoolean = (mRunSeconds == 30); // Just to trigger the watch
+		mBool = (mRunSeconds == 30); // Just to trigger the watch
 
 		// Functions example to show auto function name feature
 

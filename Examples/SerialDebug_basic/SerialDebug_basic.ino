@@ -66,7 +66,7 @@ uint32_t mTimeSeconds = 0;
 
 // Buildin Led ON ?
 
-boolean mLedON = false;
+bool mLedON = false;
 
 ////// Setup
 

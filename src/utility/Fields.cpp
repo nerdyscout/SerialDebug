@@ -50,7 +50,7 @@
 /**
 * @brief Fields C++ class constructor
 */
-Fields::Fields(String str, const char delimiter, boolean ignoreEmpty) {
+Fields::Fields(String str, const char delimiter, bool ignoreEmpty) {
 
 	// Process the string and populate a vector with this fields
     // TODO: see how ignore substring between '"'
