@@ -29,25 +29,31 @@
 // No commands from serial, no debugger, no printf
 // Minumum usage of memory RAM and program
 // Uncomment this, to use this mode
-//#define DEBUG_MINIMUM true
+// #define DEBUG_MINIMUM true
 
 // Disable SerialDebug debugger ? No more commands and features as functions and globals
-// Uncomment this to disable it 
-//#define DEBUG_DISABLE_DEBUGGER true
+// Uncomment this to disable it
+// #define DEBUG_DISABLE_DEBUGGER true
 
 // Disable Flash variables support - F()
 // Used internally in SerialDebug and in public API
 // If is a low memory board, like AVR, all strings in SerialDebug is using flash memory
 // If have RAM memory, this is more fast than flash
-//#define DEBUG_NOT_USE_FLASH_F true
+// #define DEBUG_NOT_USE_FLASH_F true
 
 // For Espressif boards, not flash support, due it have a lot of memory
 // If you need more memory, can force it:
-//#define DEBUG_USE_FLASH_F true
+// #define DEBUG_USE_FLASH_F true
 
 // Disable auto function name (good if your debug yet contains it)
-//#define DEBUG_AUTO_FUNC_DISABLED true
+// #define DEBUG_AUTO_FUNC_DISABLED true
 
+// Change interface where SerialDebug outputs its info.
+#ifdef ARDUINO_ARCH_ESP32
+#define DEBUG_SERIAL Serial1
+#else
+#define DEBUG_SERIAL Serial
+#endif
 
 // Include SerialDebug
 
@@ -57,24 +63,27 @@
 
 ////// Setup
 
-void setup() {
+void setup()
+{
 
-    // Initialize the Serial
+	// Initialize the Serial outputs free heap memory
+	Serial.begin(115200);
 
-    Serial.begin(115200);
+	// Initialize the SerialDebug outputs on Serial1
+	DEBUG_SERIAL.begin(115200);
 
 #ifdef __AVR_ATmega32U4__ // Arduino AVR Leonardo
 
-    while (!Serial) {
-        ; // wait for serial port to connect. Needed for Leonardo only
-    }
+	while (!Serial)
+	{
+		; // wait for serial port to connect. Needed for Leonardo only
+	}
 
 #else
 
-    delay(500); // Wait a time
+	delay(500); // Wait a time
 
 #endif
-
 }
 
 ////// Loop
@@ -104,7 +113,6 @@ void loop()
 
 #endif
 
-
 	// Show the memory - using SerialDebug
 	// Note if set DEBUG_DISABLED, this not compile and not generate any output
 
@@ -119,42 +127,43 @@ void loop()
 
 #if defined ARDUINO_ARCH_AVR || defined __arm__
 
-	// Based in https://forum.pjrc.com/threads/23256-Get-Free-Memory-for-Teensy-3-0
+// Based in https://forum.pjrc.com/threads/23256-Get-Free-Memory-for-Teensy-3-0
 
 #ifdef __arm__
 
-    // should use uinstd.h to define sbrk but Due causes a conflict
-    extern "C" char* sbrk(int incr);
+// should use uinstd.h to define sbrk but Due causes a conflict
+extern "C" char *sbrk(int incr);
 #else
 
-    extern char *__brkval;
-    extern char __bss_end;
+extern char *__brkval;
+extern char __bss_end;
 
 #endif
 
 #endif
 
-int freeMemory() {
+int freeMemory()
+{
 
 #if defined ESP8266 || defined ESP32
 
-	 return ESP.getFreeHeap();
+	return ESP.getFreeHeap();
 
 #elif defined ARDUINO_ARCH_AVR || defined __arm__
 
 	// function from the sdFat library (SdFatUtil.cpp)
 	// licensed under GPL v3
 	// Full credit goes to William Greiman.
-    char top;
-    #ifdef __arm__
-        return &top - reinterpret_cast<char*>(sbrk(0));
-    #else
-        return __brkval ? &top - __brkval : &top - &__bss_end;
-    #endif
+	char top;
+#ifdef __arm__
+	return &top - reinterpret_cast<char *>(sbrk(0));
+#else
+	return __brkval ? &top - __brkval : &top - &__bss_end;
+#endif
 
 #else // Not known
 
-	 return -1;
+	return -1;
 
 #endif
 }

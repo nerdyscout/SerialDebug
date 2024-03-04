@@ -156,7 +156,7 @@ __SerialDebug__ is bether than Arduino default serial debugging:
   And it not fully otimized yet.
 
   The default speed of serial is 250000, for Espressif, ARM or Mega boards
-  and 115200 for UNO, Leonardo, etc.
+  and 115200 for UNO, Leonardo, etc. Default output is on `Serial` but can be changed by define `DEBUG_SERIAL`
 
   Only exception is boards with Tiny* AVR MCU,
   due it not have CPU and memory to this library.

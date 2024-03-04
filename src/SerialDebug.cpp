@@ -571,8 +571,8 @@ static void debugSerialAppConnection();
 
 #ifdef DEBUG_USE_NATIVE_PRINTF // For Espressif boards, have Serial.printf
 
-#define PRINTF(fmt, ...) Serial.printf(fmt, ##__VA_ARGS__)
-#define PRINTFLN(fmt, ...) Serial.printf(fmt "\r\n", ##__VA_ARGS__)
+#define PRINTF(fmt, ...) DEBUG_SERIAL.printf(fmt, ##__VA_ARGS__)
+#define PRINTFLN(fmt, ...) DEBUG_SERIAL.printf(fmt "\r\n", ##__VA_ARGS__)
 
 #else // Use debugPrintf
 
@@ -625,7 +625,7 @@ void debugHandleInactive()
 
 	if (_debugSerialApp && execCount == 6)
 	{
-		Serial.println(F("$app:I"));
+		DEBUG_SERIAL.println(F("$app:I"));
 	}
 #endif // DEBUG_MINIMUM
 
@@ -637,7 +637,7 @@ void debugHandleInactive()
 		_debugActive = true;
 
 		printSerialDebug();
-		Serial.println(F("Debug now is active."));
+		DEBUG_SERIAL.println(F("Debug now is active."));
 
 		// Verify
 		// Show helps
@@ -649,9 +649,9 @@ void debugHandleInactive()
 		// For minimum - checks if is app
 
 		String data = "";
-		while (Serial.available() > 0)
+		while (DEBUG_SERIAL.available() > 0)
 		{
-			char character = Serial.read();
+			char character = DEBUG_SERIAL.read();
 			if (character == 10 or character == 13)
 			{ // new line
 				break;
@@ -671,31 +671,31 @@ void debugHandleInactive()
 			char dbgEnabled = 'D';
 			char dbgMinimum = 'Y';
 
-			Serial.print("$app:V:");
-			Serial.print(DEBUG_VERSION);
-			Serial.print(':');
-			Serial.print(BOARD);
-			Serial.print(':');
-			Serial.print(features);
-			Serial.print(':');
-			Serial.print('?');
-			Serial.print(':');
-			Serial.print(dbgEnabled);
-			Serial.print(':');
-			Serial.println(dbgMinimum);
+			DEBUG_SERIAL.print("$app:V:");
+			DEBUG_SERIAL.print(DEBUG_VERSION);
+			DEBUG_SERIAL.print(':');
+			DEBUG_SERIAL.print(BOARD);
+			DEBUG_SERIAL.print(':');
+			DEBUG_SERIAL.print(features);
+			DEBUG_SERIAL.print(':');
+			DEBUG_SERIAL.print('?');
+			DEBUG_SERIAL.print(':');
+			DEBUG_SERIAL.print(dbgEnabled);
+			DEBUG_SERIAL.print(':');
+			DEBUG_SERIAL.println(dbgMinimum);
 
 			// Print message
 
 			printSerialDebug();
-			Serial.print(F("Conection with app - SerialDebug library version "));
-			Serial.println(DEBUG_VERSION);
+			DEBUG_SERIAL.print(F("Conection with app - SerialDebug library version "));
+			DEBUG_SERIAL.println(DEBUG_VERSION);
 		}
 #else
 		// SerialApp connected ?
 
 		if (_debugSerialApp)
 		{
-			Serial.println(F("$app:A"));
+			DEBUG_SERIAL.println(F("$app:A"));
 		}
 #endif
 		// Go to initial level
@@ -718,7 +718,7 @@ void debugHandleInactive()
 		if (execCount % 2 == 0)
 		{ // For each 2 seconds
 			printSerialDebug();
-			Serial.println(F("Please press ? or another command and enter to activate debugs"));
+			DEBUG_SERIAL.println(F("Please press ? or another command and enter to activate debugs"));
 		}
 
 		execCount--;
@@ -726,13 +726,13 @@ void debugHandleInactive()
 #ifndef BOARD_LOW_MEMORY // Not for low memory boards to save Flash memory
 		if (execCount == 0)
 		{
-			Serial.println(F("* Please verify if is in Newline mode in monitor serial"));
+			DEBUG_SERIAL.println(F("* Please verify if is in Newline mode in monitor serial"));
 		}
 #endif
 	}
 #else
 	printSerialDebug();
-	Serial.println(F("Please press any key and enter to activate debugs"));
+	DEBUG_SERIAL.println(F("Please press any key and enter to activate debugs"));
 #endif
 }
 
@@ -746,26 +746,26 @@ void debugSetLevel(uint8_t level)
 	if (level < DEBUG_LEVELS_SIZE)
 	{
 		_debugLevel = level;
-		Serial.print(F("Level set to "));
+		DEBUG_SERIAL.print(F("Level set to "));
 		switch (_debugLevel)
 		{
 		case DEBUG_LEVEL_NONE:
-			Serial.println(F("None"));
+			DEBUG_SERIAL.println(F("None"));
 			break;
 		case DEBUG_LEVEL_ERROR:
-			Serial.println(F("Error"));
+			DEBUG_SERIAL.println(F("Error"));
 			break;
 		case DEBUG_LEVEL_WARN:
-			Serial.println(F("Warning"));
+			DEBUG_SERIAL.println(F("Warning"));
 			break;
 		case DEBUG_LEVEL_INFO:
-			Serial.println(F("Information"));
+			DEBUG_SERIAL.println(F("Information"));
 			break;
 		case DEBUG_LEVEL_DEBUG:
-			Serial.println(F("Debug"));
+			DEBUG_SERIAL.println(F("Debug"));
 			break;
 		case DEBUG_LEVEL_VERBOSE:
-			Serial.println(F("Verbose"));
+			DEBUG_SERIAL.println(F("Verbose"));
 			break;
 		}
 	}
@@ -802,15 +802,15 @@ void debugSilence(bool activate, bool showMessage, bool fromBreak)
 	{
 
 		printSerialDebug();
-		Serial.println();
-		Serial.println(F("* Debug now is in silent mode"));
-		Serial.println(F("* Press enter or another command to return show debugs"));
+		DEBUG_SERIAL.println();
+		DEBUG_SERIAL.println(F("* Debug now is in silent mode"));
+		DEBUG_SERIAL.println(F("* Press enter or another command to return show debugs"));
 	}
 	else if (!_debugSilence && showMessage)
 	{
 
 		printSerialDebug();
-		Serial.println(F("Debug now exit from silent mode"));
+		DEBUG_SERIAL.println(F("Debug now exit from silent mode"));
 	}
 
 #ifndef DEBUG_MINIMUM
@@ -832,9 +832,9 @@ void debugPrintInfo(const char level, const char *function)
 
 	// Show level
 
-	Serial.print('(');
-	Serial.print(level);
-	Serial.print(' ');
+	DEBUG_SERIAL.print('(');
+	DEBUG_SERIAL.print(level);
+	DEBUG_SERIAL.print(' ');
 
 	// Show time / profiler
 
@@ -845,26 +845,26 @@ void debugPrintInfo(const char level, const char *function)
 
 		time = (millis() - _debugLastTime);
 
-		Serial.print("p:^");
+		DEBUG_SERIAL.print("p:^");
 
 		if (time < 10)
 		{ // Simple formatter, to not use printf
-			Serial.print("000");
+			DEBUG_SERIAL.print("000");
 		}
 		else if (time < 100)
 		{
-			Serial.print("00");
+			DEBUG_SERIAL.print("00");
 		}
 		else if (time < 1000)
 		{
-			Serial.print('0');
+			DEBUG_SERIAL.print('0');
 		}
-		Serial.print(time);
+		DEBUG_SERIAL.print(time);
 	}
 	else
 	{
 
-		Serial.print(millis());
+		DEBUG_SERIAL.print(millis());
 	}
 
 	_debugLastTime = millis();
@@ -876,8 +876,8 @@ void debugPrintInfo(const char level, const char *function)
 	if (function)
 	{ // Auto function
 
-		Serial.print(' ');
-		Serial.print(function);
+		DEBUG_SERIAL.print(' ');
+		DEBUG_SERIAL.print(function);
 	}
 #endif
 
@@ -885,14 +885,14 @@ void debugPrintInfo(const char level, const char *function)
 
 #ifdef DEBUG_CORE
 
-	Serial.print(' ');
-	Serial.print('C');
-	Serial.print(xPortGetCoreID());
+	DEBUG_SERIAL.print(' ');
+	DEBUG_SERIAL.print('C');
+	DEBUG_SERIAL.print(xPortGetCoreID());
 
 #endif
 
-	Serial.print(')');
-	Serial.print(' ');
+	DEBUG_SERIAL.print(')');
+	DEBUG_SERIAL.print(' ');
 }
 
 // Print SerialDebug begin for messages
@@ -901,7 +901,7 @@ void debugPrintInfo(const char level, const char *function)
 void printSerialDebug()
 {
 
-	Serial.print(F("* SerialDebug: "));
+	DEBUG_SERIAL.print(F("* SerialDebug: "));
 }
 
 // Not for minimum mode - to save memory
@@ -1058,7 +1058,7 @@ void debugShowProfiler(bool activate, uint16_t minTime, bool showMessage)
 			{
 
 				printSerialDebug();
-				Serial.println(F("Show profiler: On (without minimal time)\r\n*"));
+				DEBUG_SERIAL.println(F("Show profiler: On (without minimal time)\r\n*"));
 			}
 			else
 			{
@@ -1077,7 +1077,7 @@ void debugShowProfiler(bool activate, uint16_t minTime, bool showMessage)
 		{
 
 			printSerialDebug();
-			Serial.println(F("Show profiler: Off\r\n*"));
+			DEBUG_SERIAL.println(F("Show profiler: Off\r\n*"));
 		}
 	}
 }
@@ -1139,7 +1139,7 @@ void debugPrintf(bool newline, const char level, const char *function, const cha
 		//
 		//		// Send it to serial
 		//
-		//		Serial.print(buffer);
+		//		DEBUG_SERIAL.print(buffer);
 
 		// Now using a any prints, to avoid one printf
 
@@ -1176,7 +1176,7 @@ void debugPrintf(bool newline, const char level, const char *function, const cha
 
 	if (newline)
 	{
-		Serial.println(); // TODO append \r\n in buffer to avoid this command
+		DEBUG_SERIAL.println(); // TODO append \r\n in buffer to avoid this command
 	}
 
 	// Clean
@@ -1245,7 +1245,7 @@ void debugPrintf(bool newline, const char level, const char *function, const __F
 		//
 		//		// Send it to serial
 		//
-		//		Serial.print(buffer);
+		//		DEBUG_SERIAL.print(buffer);
 
 		// Now using a any prints, to avoid one printf
 
@@ -1282,7 +1282,7 @@ void debugPrintf(bool newline, const char level, const char *function, const __F
 
 	if (newline)
 	{
-		Serial.println(); // TODO append \r\n in buffer to avoid this command
+		DEBUG_SERIAL.println(); // TODO append \r\n in buffer to avoid this command
 	}
 
 	// Clean
@@ -1335,7 +1335,7 @@ String debugBreak(const char *str, uint32_t timeout, bool byWatch)
 	else if (timeout == DEBUG_BREAK_TIMEOUT)
 	{ // Is called by debugBreak() and not for watches ?
 
-		Serial.println(F("* Press any key or command, and enter to continue"));
+		DEBUG_SERIAL.println(F("* Press any key or command, and enter to continue"));
 		appBreakType = 'C';
 	}
 
@@ -1423,7 +1423,7 @@ String debugBreak(const char *str, uint32_t timeout, bool byWatch)
 	if (_debugSerialApp)
 	{ // For DebugSerialApp connection ?
 
-		Serial.println(F("$app:B:0"));
+		DEBUG_SERIAL.println(F("$app:B:0"));
 	}
 
 	// Is in silence ? (restore it)
@@ -1487,14 +1487,14 @@ static void processCommand(String &command, bool repeating, bool showError)
 	if (command.length() > DEBUG_MAX_SIZE_COMMANDS)
 	{
 		printSerialDebug();
-		Serial.println(errorSintax);
+		DEBUG_SERIAL.println(errorSintax);
 		return;
 	}
 
 	if (options.length() > DEBUG_MAX_SIZE_CMD_OPTIONS)
 	{
 		printSerialDebug();
-		Serial.println(errorSintax);
+		DEBUG_SERIAL.println(errorSintax);
 		return;
 	}
 
@@ -1637,7 +1637,7 @@ static void processCommand(String &command, bool repeating, bool showError)
 			{
 
 				printSerialDebug();
-				Serial.println(F("Invalid number in argument"));
+				DEBUG_SERIAL.println(F("Invalid number in argument"));
 			}
 		}
 
@@ -1666,7 +1666,7 @@ static void processCommand(String &command, bool repeating, bool showError)
 		if (_debugGlobalsAdded == 0 && _debugFunctionsAdded == 0)
 		{
 			printSerialDebug();
-			Serial.println(F("No globals or functions added"));
+			DEBUG_SERIAL.println(F("No globals or functions added"));
 			return;
 		}
 
@@ -1748,7 +1748,7 @@ static void processCommand(String &command, bool repeating, bool showError)
 
 #else
 		printSerialDebug();
-		Serial.println(F("Debugger is not enabled in your project"));
+		DEBUG_SERIAL.println(F("Debugger is not enabled in your project"));
 
 #endif
 	}
@@ -1764,7 +1764,7 @@ static void processCommand(String &command, bool repeating, bool showError)
 		canRepeat = true;
 #else
 		printSerialDebug();
-		Serial.println(F("Debug functions is not enabled in your project"));
+		DEBUG_SERIAL.println(F("Debug functions is not enabled in your project"));
 
 #endif
 	}
@@ -1786,12 +1786,12 @@ static void processCommand(String &command, bool repeating, bool showError)
 		{
 
 			printSerialDebug();
-			Serial.println(F("Debugger is not enabled, please command dbg to enable this"));
+			DEBUG_SERIAL.println(F("Debugger is not enabled, please command dbg to enable this"));
 		}
 
 #else
 		printSerialDebug();
-		Serial.println(F("Debug functions is not enabled in your project"));
+		DEBUG_SERIAL.println(F("Debug functions is not enabled in your project"));
 
 #endif
 
@@ -1813,12 +1813,12 @@ static void processCommand(String &command, bool repeating, bool showError)
 		{
 
 			printSerialDebug();
-			Serial.println(F("Debugger is not enabled, please command dbg to enable this"));
+			DEBUG_SERIAL.println(F("Debugger is not enabled, please command dbg to enable this"));
 		}
 
 #else
 		printSerialDebug();
-		Serial.println(F("Debug functions is not enabled in your project"));
+		DEBUG_SERIAL.println(F("Debug functions is not enabled in your project"));
 
 #endif
 
@@ -1846,7 +1846,7 @@ static void processCommand(String &command, bool repeating, bool showError)
 		{
 
 			printSerialDebug();
-			Serial.println(F("This option is not implemented for this board"));
+			DEBUG_SERIAL.println(F("This option is not implemented for this board"));
 		}
 	}
 	else if (command == "reset")
@@ -1855,7 +1855,7 @@ static void processCommand(String &command, bool repeating, bool showError)
 #ifdef ARDUINO_ARCH_AVR
 
 		printSerialDebug();
-		Serial.println(F("Resetting ..."));
+		DEBUG_SERIAL.println(F("Resetting ..."));
 
 		delay(1000);
 
@@ -1868,9 +1868,9 @@ static void processCommand(String &command, bool repeating, bool showError)
 		printSerialDebug();
 
 #if defined ESP8266
-		Serial.println("Resetting the ESP8266 ...");
+		DEBUG_SERIAL.println("Resetting the ESP8266 ...");
 #elif defined ESP32
-		Serial.println("Resetting the ESP32 ...");
+		DEBUG_SERIAL.println("Resetting the ESP32 ...");
 #endif
 
 		delay(1000);
@@ -1881,7 +1881,7 @@ static void processCommand(String &command, bool repeating, bool showError)
 
 #else
 		printSerialDebug();
-		Serial.println(F("No reset for this board"));
+		DEBUG_SERIAL.println(F("No reset for this board"));
 
 #endif // ARDUINO_ARCH_AVR
 
@@ -1894,7 +1894,7 @@ static void processCommand(String &command, bool repeating, bool showError)
 
 		system_update_cpu_freq(80);
 		printSerialDebug();
-		Serial.println(F("CPU ESP8266 changed to: 80 MHz"));
+		DEBUG_SERIAL.println(F("CPU ESP8266 changed to: 80 MHz"));
 	}
 	else if (command == "cpu160")
 	{
@@ -1903,7 +1903,7 @@ static void processCommand(String &command, bool repeating, bool showError)
 
 		system_update_cpu_freq(160);
 		printSerialDebug();
-		Serial.println(F("CPU ESP8266 changed to: 160 MHz"));
+		DEBUG_SERIAL.println(F("CPU ESP8266 changed to: 160 MHz"));
 
 #endif
 	}
@@ -1916,13 +1916,13 @@ static void processCommand(String &command, bool repeating, bool showError)
 		{ // Help
 
 			printSerialDebug();
-			Serial.println(F("Valid last commands to repeat: f|g|m"));
+			DEBUG_SERIAL.println(F("Valid last commands to repeat: f|g|m"));
 		}
 		else if (_debugLastCommand.length() == 0)
 		{
 
 			printSerialDebug();
-			Serial.println(F("Last command not set or unsupported. use r ? to show help"));
+			DEBUG_SERIAL.println(F("Last command not set or unsupported. use r ? to show help"));
 		}
 		else
 		{ // Start repeats
@@ -1949,7 +1949,7 @@ static void processCommand(String &command, bool repeating, bool showError)
 		if (showError)
 		{
 			printSerialDebug();
-			Serial.println(errorSintax);
+			DEBUG_SERIAL.println(errorSintax);
 		}
 	}
 
@@ -1984,16 +1984,16 @@ static void processCommand(String &command, bool repeating, bool showError)
 void showHelp()
 {
 
-	Serial.println('*');
+	DEBUG_SERIAL.println('*');
 	printSerialDebug();
-	Serial.println();
-	Serial.print(F("* Version: "));
-	Serial.print(DEBUG_VERSION);
-	Serial.println();
+	DEBUG_SERIAL.println();
+	DEBUG_SERIAL.print(F("* Version: "));
+	DEBUG_SERIAL.print(DEBUG_VERSION);
+	DEBUG_SERIAL.println();
 
-	Serial.print(F("* Arduino board: "));
-	Serial.print(BOARD);
-	Serial.println();
+	DEBUG_SERIAL.print(F("* Arduino board: "));
+	DEBUG_SERIAL.print(BOARD);
+	DEBUG_SERIAL.println();
 
 	int free = freeMemory();
 
@@ -2009,12 +2009,12 @@ void showHelp()
 
 	// Using PROGMEM in large strings (even for Espressif boards)
 
-	Serial.println(FPSTR(debugHelp));
+	DEBUG_SERIAL.println(FPSTR(debugHelp));
 
 #ifdef ESP8266 // Esp8266 only (ESP32 not to easy to change it)
 
-	Serial.println(F("*    cpu80  -> ESP8266 CPU a 80MHz"));
-	Serial.println(F("*    cpu160 -> ESP8266 CPU a 160MHz"));
+	DEBUG_SERIAL.println(F("*    cpu80  -> ESP8266 CPU a 80MHz"));
+	DEBUG_SERIAL.println(F("*    cpu160 -> ESP8266 CPU a 160MHz"));
 
 #endif
 }
@@ -2377,8 +2377,8 @@ void debugHandleDebugger(bool calledByHandleEvent)
 
 			printSerialDebug();
 			PRINTFLN(F("%u watch(es) has triggered."), totTriggered);
-			Serial.println(F("* Press enter to continue"));
-			Serial.println(F("* or another command as: reset(to reset) or ns(to not stop again)"));
+			DEBUG_SERIAL.println(F("* Press enter to continue"));
+			DEBUG_SERIAL.println(F("* or another command as: reset(to reset) or ns(to not stop again)"));
 
 			// Do a break
 
@@ -2851,7 +2851,7 @@ int8_t debugAddWatchBool(uint8_t globalNum, uint8_t operation, bool value, bool 
 	if (operation == DEBUG_WATCH_LESS_EQ || operation == DEBUG_WATCH_GREAT_EQ)
 	{
 		printSerialDebug();
-		Serial.println(F("Operation not allowed for bool"));
+		DEBUG_SERIAL.println(F("Operation not allowed for bool"));
 		return -1;
 	}
 
@@ -3557,7 +3557,7 @@ int8_t debugAddWatchCross(uint8_t globalNum, uint8_t operation, uint8_t anotherG
 	{
 
 		printSerialDebug();
-		Serial.println(F("Globals numbers (first and second) can not be equals"));
+		DEBUG_SERIAL.println(F("Globals numbers (first and second) can not be equals"));
 		return -1;
 	}
 
@@ -3565,7 +3565,7 @@ int8_t debugAddWatchCross(uint8_t globalNum, uint8_t operation, uint8_t anotherG
 	{
 
 		printSerialDebug();
-		Serial.println(F("Changed type opretation is not allowed for cross watch"));
+		DEBUG_SERIAL.println(F("Changed type opretation is not allowed for cross watch"));
 		return -1;
 	}
 
@@ -3951,7 +3951,7 @@ static void processWatches(String &options)
 	{
 
 		printSerialDebug();
-		Serial.println(errorSintax);
+		DEBUG_SERIAL.println(errorSintax);
 	}
 	else if (_debugWatchesAdded > 0 || (firstOption == "a" || firstOption == ""))
 	{
@@ -3992,7 +3992,7 @@ static void processWatches(String &options)
 				{
 
 					printSerialDebug();
-					Serial.println(errorSintax);
+					DEBUG_SERIAL.println(errorSintax);
 				}
 			}
 			else if (firstOption == "ac")
@@ -4009,7 +4009,7 @@ static void processWatches(String &options)
 				{
 
 					printSerialDebug();
-					Serial.println(errorSintax);
+					DEBUG_SERIAL.println(errorSintax);
 				}
 			}
 			else if (firstOption == "u")
@@ -4026,7 +4026,7 @@ static void processWatches(String &options)
 				{
 
 					printSerialDebug();
-					Serial.println(errorSintax);
+					DEBUG_SERIAL.println(errorSintax);
 				}
 			}
 			else if (firstOption == "d" || firstOption == "e" || firstOption == "r")
@@ -4043,7 +4043,7 @@ static void processWatches(String &options)
 				{
 
 					printSerialDebug();
-					Serial.println(errorSintax);
+					DEBUG_SERIAL.println(errorSintax);
 				}
 			}
 			else if (firstOption == "ns")
@@ -4054,7 +4054,7 @@ static void processWatches(String &options)
 				_debugWatchStop = false;
 
 				printSerialDebug();
-				Serial.println("Watches set to non stop");
+				DEBUG_SERIAL.println("Watches set to non stop");
 
 				if (_debugSerialApp)
 				{ // App ?
@@ -4069,7 +4069,7 @@ static void processWatches(String &options)
 				_debugWatchStop = true;
 
 				printSerialDebug();
-				Serial.println("Watches set to stop");
+				DEBUG_SERIAL.println("Watches set to stop");
 
 				if (_debugSerialApp)
 				{ // ? App
@@ -4080,7 +4080,7 @@ static void processWatches(String &options)
 			{
 
 				printSerialDebug();
-				Serial.println(errorSintax);
+				DEBUG_SERIAL.println(errorSintax);
 			}
 		}
 	}
@@ -4088,7 +4088,7 @@ static void processWatches(String &options)
 	{
 
 		printSerialDebug();
-		Serial.println(F("Watches not added yet"));
+		DEBUG_SERIAL.println(F("Watches not added yet"));
 	}
 
 	// Clear the fields
@@ -4123,7 +4123,7 @@ static void processWatchesAction(Fields &fields)
 		{
 
 			printSerialDebug();
-			Serial.println(F("Invalid watch num\r\n*"));
+			DEBUG_SERIAL.println(F("Invalid watch num\r\n*"));
 			return;
 		}
 
@@ -4133,7 +4133,7 @@ static void processWatchesAction(Fields &fields)
 	{
 
 		printSerialDebug();
-		Serial.println(F("Watch num must be numeric\r\n*"));
+		DEBUG_SERIAL.println(F("Watch num must be numeric\r\n*"));
 		return;
 	}
 
@@ -4151,7 +4151,7 @@ static void processWatchesAction(Fields &fields)
 			_debugWatchesAdded = 0;
 
 			printSerialDebug();
-			Serial.println(F("All watches has removed"));
+			DEBUG_SERIAL.println(F("All watches has removed"));
 		}
 		else
 		{
@@ -4167,7 +4167,7 @@ static void processWatchesAction(Fields &fields)
 			_debugWatchesAdded--;
 
 			printSerialDebug();
-			Serial.println(F("Watch has removed"));
+			DEBUG_SERIAL.println(F("Watch has removed"));
 		}
 
 		return;
@@ -4249,7 +4249,7 @@ static int8_t addWatch(Fields &fields)
 		{
 
 			printSerialDebug();
-			Serial.println(F("Invalid index for global in watch\r\n*"));
+			DEBUG_SERIAL.println(F("Invalid index for global in watch\r\n*"));
 			return false;
 		}
 
@@ -4276,7 +4276,7 @@ static int8_t addWatch(Fields &fields)
 	{
 
 		printSerialDebug();
-		Serial.println(F("Invalid operation\r\n*"));
+		DEBUG_SERIAL.println(F("Invalid operation\r\n*"));
 		return false;
 	}
 
@@ -4310,7 +4310,7 @@ static int8_t addWatch(Fields &fields)
 			{
 
 				printSerialDebug();
-				Serial.println(F("The value must be numeric\r\n*"));
+				DEBUG_SERIAL.println(F("The value must be numeric\r\n*"));
 				return false;
 			}
 			break;
@@ -4448,9 +4448,9 @@ static int8_t addWatch(Fields &fields)
 	if (ret != -1)
 	{
 		printSerialDebug();
-		Serial.println(F("Watch added with sucess:"));
+		DEBUG_SERIAL.println(F("Watch added with sucess:"));
 		showWatch(ret);
-		Serial.println('*');
+		DEBUG_SERIAL.println('*');
 	}
 
 	return ret;
@@ -4477,7 +4477,7 @@ static int8_t addWatchCross(Fields &fields)
 		{
 
 			printSerialDebug();
-			Serial.println(F("Invalid index for global1\r\n*"));
+			DEBUG_SERIAL.println(F("Invalid index for global1\r\n*"));
 			return false;
 		}
 
@@ -4504,7 +4504,7 @@ static int8_t addWatchCross(Fields &fields)
 	{
 
 		printSerialDebug();
-		Serial.println(F("Invalid operation\r\n*"));
+		DEBUG_SERIAL.println(F("Invalid operation\r\n*"));
 		return false;
 	}
 
@@ -4512,7 +4512,7 @@ static int8_t addWatchCross(Fields &fields)
 	{ // Not for changed type
 
 		printSerialDebug();
-		Serial.println(F("Invalid operation - not can be of change type\r\n*"));
+		DEBUG_SERIAL.println(F("Invalid operation - not can be of change type\r\n*"));
 		return false;
 	}
 
@@ -4531,7 +4531,7 @@ static int8_t addWatchCross(Fields &fields)
 		{
 
 			printSerialDebug();
-			Serial.println(F("Invalid index for global2\r\n*"));
+			DEBUG_SERIAL.println(F("Invalid index for global2\r\n*"));
 			return false;
 		}
 
@@ -4552,7 +4552,7 @@ static int8_t addWatchCross(Fields &fields)
 	{
 
 		printSerialDebug();
-		Serial.println(F("Global2 must be different than global1\r\n*"));
+		DEBUG_SERIAL.println(F("Global2 must be different than global1\r\n*"));
 		return false;
 	}
 
@@ -4577,7 +4577,7 @@ static int8_t addWatchCross(Fields &fields)
 	if (ret != -1)
 	{
 		printSerialDebug();
-		Serial.println(F("Watch added with sucess:"));
+		DEBUG_SERIAL.println(F("Watch added with sucess:"));
 		showWatch(ret);
 	}
 
@@ -4625,7 +4625,7 @@ static int8_t showWatches(String &options, bool debugSerialApp)
 			{
 
 				printSerialDebug();
-				Serial.println(F("Option not is a number valid (>0)"));
+				DEBUG_SERIAL.println(F("Option not is a number valid (>0)"));
 				return -1;
 			}
 		}
@@ -4633,7 +4633,7 @@ static int8_t showWatches(String &options, bool debugSerialApp)
 		{
 
 			printSerialDebug();
-			Serial.println(F("Option not is a number"));
+			DEBUG_SERIAL.println(F("Option not is a number"));
 			return -1;
 		}
 	}
@@ -4650,7 +4650,7 @@ static int8_t showWatches(String &options, bool debugSerialApp)
 		}
 		else
 		{
-			Serial.println(F("Searching and showing watch for global variable:"));
+			DEBUG_SERIAL.println(F("Searching and showing watch for global variable:"));
 		}
 	}
 
@@ -4682,7 +4682,7 @@ static int8_t showWatches(String &options, bool debugSerialApp)
 			{
 
 				printSerialDebug();
-				Serial.println(F("Invalid index for global variable in watch\r\n*"));
+				DEBUG_SERIAL.println(F("Invalid index for global variable in watch\r\n*"));
 				return -1;
 			}
 
@@ -4706,19 +4706,19 @@ static int8_t showWatches(String &options, bool debugSerialApp)
 		if (showed > 0)
 		{
 
-			Serial.println('*');
+			DEBUG_SERIAL.println('*');
 			printSerialDebug();
-			Serial.println();
-			Serial.println(F("* To show: wa [num]"));
-			Serial.println(F("* To add: wa a {global [name|number]} [==|!=|<|>|<=|>=|change] [value] [as]"));
-			Serial.println(F("* note: as -> set watch to stop always"));
-			Serial.println(F("* To add cross (2 globals): wa ac {global [name|number]} [=|!=|<|>|<=|>=] {global [name|number]} [as]"));
-			Serial.println(F("* To change: wa u {global [name|number]} [==|!=|<|>|<=|>=|change] [value] [as]"));
-			Serial.println(F("* To change cross (not yet implemented)"));
-			Serial.println(F("* To disable: wa d [num|all]"));
-			Serial.println(F("* To enable: wa e [num|all]"));
-			Serial.println(F("* To nonstop on watches: wa ns"));
-			Serial.println(F("* To stop on watches: wa s"));
+			DEBUG_SERIAL.println();
+			DEBUG_SERIAL.println(F("* To show: wa [num]"));
+			DEBUG_SERIAL.println(F("* To add: wa a {global [name|number]} [==|!=|<|>|<=|>=|change] [value] [as]"));
+			DEBUG_SERIAL.println(F("* note: as -> set watch to stop always"));
+			DEBUG_SERIAL.println(F("* To add cross (2 globals): wa ac {global [name|number]} [=|!=|<|>|<=|>=] {global [name|number]} [as]"));
+			DEBUG_SERIAL.println(F("* To change: wa u {global [name|number]} [==|!=|<|>|<=|>=|change] [value] [as]"));
+			DEBUG_SERIAL.println(F("* To change cross (not yet implemented)"));
+			DEBUG_SERIAL.println(F("* To disable: wa d [num|all]"));
+			DEBUG_SERIAL.println(F("* To enable: wa e [num|all]"));
+			DEBUG_SERIAL.println(F("* To nonstop on watches: wa ns"));
+			DEBUG_SERIAL.println(F("* To stop on watches: wa s"));
 
 			doBreak = true;
 		}
@@ -4726,7 +4726,7 @@ static int8_t showWatches(String &options, bool debugSerialApp)
 		{
 
 			printSerialDebug();
-			Serial.println(F("Watch not found."));
+			DEBUG_SERIAL.println(F("Watch not found."));
 
 			doBreak = true;
 		}
@@ -4757,7 +4757,7 @@ static bool showWatch(uint8_t watchNum, bool debugSerialApp)
 	{
 
 		printSerialDebug();
-		Serial.println(F("Invalid index for watch \r\n*"));
+		DEBUG_SERIAL.println(F("Invalid index for watch \r\n*"));
 		return false;
 	}
 
@@ -4900,7 +4900,7 @@ static bool showWatch(uint8_t watchNum, bool debugSerialApp)
 				{
 
 					printSerialDebug();
-					Serial.println(F("Invalid index for global in watch\r\n*"));
+					DEBUG_SERIAL.println(F("Invalid index for global in watch\r\n*"));
 					return false;
 				}
 
@@ -4961,7 +4961,7 @@ static bool changeWatch(Fields &fields)
 		{
 
 			printSerialDebug();
-			Serial.println(F("Invalid index for watch\r\n*"));
+			DEBUG_SERIAL.println(F("Invalid index for watch\r\n*"));
 			return false;
 		}
 
@@ -4971,7 +4971,7 @@ static bool changeWatch(Fields &fields)
 	{
 
 		printSerialDebug();
-		Serial.println(F("Invalid watch number\r\n*"));
+		DEBUG_SERIAL.println(F("Invalid watch number\r\n*"));
 
 		return false;
 	}
@@ -4991,7 +4991,7 @@ static bool changeWatch(Fields &fields)
 		{
 
 			printSerialDebug();
-			Serial.println(F("Invalid index for global in watch\r\n*"));
+			DEBUG_SERIAL.println(F("Invalid index for global in watch\r\n*"));
 			return false;
 		}
 
@@ -5018,7 +5018,7 @@ static bool changeWatch(Fields &fields)
 	{
 
 		printSerialDebug();
-		Serial.println(F("Invalid operation\r\n*"));
+		DEBUG_SERIAL.println(F("Invalid operation\r\n*"));
 		return false;
 	}
 
@@ -5052,7 +5052,7 @@ static bool changeWatch(Fields &fields)
 			{
 
 				printSerialDebug();
-				Serial.println(F("The value must be numeric\r\n*"));
+				DEBUG_SERIAL.println(F("The value must be numeric\r\n*"));
 				return false;
 			}
 			break;
@@ -5211,9 +5211,9 @@ static bool changeWatch(Fields &fields)
 	// Return
 
 	printSerialDebug();
-	Serial.println(F("Watch updated with sucess:"));
+	DEBUG_SERIAL.println(F("Watch updated with sucess:"));
 	showWatch(watchNum);
-	Serial.println('*');
+	DEBUG_SERIAL.println('*');
 
 	return true;
 }
@@ -5227,7 +5227,7 @@ static bool verifyGlobalType(uint8_t globalNum, uint8_t type)
 	{
 
 		printSerialDebug();
-		Serial.println(F("Invalid index for global in watch\r\n*"));
+		DEBUG_SERIAL.println(F("Invalid index for global in watch\r\n*"));
 		return false;
 	}
 
@@ -5237,7 +5237,7 @@ static bool verifyGlobalType(uint8_t globalNum, uint8_t type)
 	{
 
 		printSerialDebug();
-		Serial.println(F("Invalid type for global in watch\r\n*"));
+		DEBUG_SERIAL.println(F("Invalid type for global in watch\r\n*"));
 	}
 
 	return ret;
@@ -6285,7 +6285,7 @@ static void updateValue(uint8_t typeFrom, void *pointerFrom, uint8_t typeTo, voi
 	if (!pointerFrom)
 	{
 		printSerialDebug();
-		Serial.println(F("source value empty"));
+		DEBUG_SERIAL.println(F("source value empty"));
 		return;
 	}
 
@@ -6531,7 +6531,7 @@ static void updateValue(uint8_t typeFrom, void *pointerFrom, uint8_t typeTo, voi
 	{
 		// String not allowed to update
 		printSerialDebug();
-		Serial.println(F("String not allow updated"));
+		DEBUG_SERIAL.println(F("String not allow updated"));
 	}
 	break;
 	}
@@ -6554,7 +6554,7 @@ static void processFunctions(String &options)
 	if (fields.size() > 2)
 	{
 		printSerialDebug();
-		Serial.println(F("Invalid sintax for functions. use f ? to show help"));
+		DEBUG_SERIAL.println(F("Invalid sintax for functions. use f ? to show help"));
 		return;
 	}
 
@@ -6592,9 +6592,9 @@ static void processFunctions(String &options)
 	{
 
 		printSerialDebug();
-		Serial.println(F("Functions not added to SerialDebug in your project"));
+		DEBUG_SERIAL.println(F("Functions not added to SerialDebug in your project"));
 #ifndef BOARD_LOW_MEMORY // Not for low memory boards
-		Serial.println(F("* See how do it in advanced example"));
+		DEBUG_SERIAL.println(F("* See how do it in advanced example"));
 #endif
 	}
 }
@@ -6622,7 +6622,7 @@ static int8_t showFunctions(String &options, bool one, bool debugSerialApp)
 		if (one)
 		{
 			printSerialDebug();
-			Serial.println(F("Option not informed"));
+			DEBUG_SERIAL.println(F("Option not informed"));
 			return -1;
 		}
 
@@ -6644,7 +6644,7 @@ static int8_t showFunctions(String &options, bool one, bool debugSerialApp)
 			{
 
 				printSerialDebug();
-				Serial.println(F("* not allowed, use name or number"));
+				DEBUG_SERIAL.println(F("* not allowed, use name or number"));
 				return -1;
 			}
 
@@ -6698,7 +6698,7 @@ static int8_t showFunctions(String &options, bool one, bool debugSerialApp)
 		else if (!one)
 		{
 			printSerialDebug();
-			Serial.println(F("Searching and showing functions:"));
+			DEBUG_SERIAL.println(F("Searching and showing functions:"));
 		}
 	}
 
@@ -6797,15 +6797,15 @@ static int8_t showFunctions(String &options, bool one, bool debugSerialApp)
 					}
 					else if (_debugFunctions[i].descriptionF)
 					{ // For Flash F, multiples print
-						Serial.print(':');
-						Serial.println(_debugFunctions[i].descriptionF);
+						DEBUG_SERIAL.print(':');
+						DEBUG_SERIAL.println(_debugFunctions[i].descriptionF);
 					}
 					else
 					{
-						Serial.println();
+						DEBUG_SERIAL.println();
 					}
 #else
-					Serial.println();
+					DEBUG_SERIAL.println();
 #endif
 				}
 				else
@@ -6820,15 +6820,15 @@ static int8_t showFunctions(String &options, bool one, bool debugSerialApp)
 					}
 					else if (_debugFunctions[i].descriptionF)
 					{ // For Flash F, multiples print
-						Serial.print(F(" // "));
-						Serial.println(_debugFunctions[i].descriptionF);
+						DEBUG_SERIAL.print(F(" // "));
+						DEBUG_SERIAL.println(_debugFunctions[i].descriptionF);
 					}
 					else
 					{
-						Serial.println();
+						DEBUG_SERIAL.println();
 					}
 #else
-					Serial.println();
+					DEBUG_SERIAL.println();
 #endif
 				}
 
@@ -6851,10 +6851,10 @@ static int8_t showFunctions(String &options, bool one, bool debugSerialApp)
 			{ // Not repeating and not for SerialDebugApp connection
 
 				printSerialDebug();
-				Serial.println();
-				Serial.println(F("* To show: f [name|num]"));
-				Serial.println(F("* To search with start of name (case insensitive): f name*"));
-				Serial.println(F("* To call it, just command: f [name|number] [arg]\r\n*"));
+				DEBUG_SERIAL.println();
+				DEBUG_SERIAL.println(F("* To show: f [name|num]"));
+				DEBUG_SERIAL.println(F("* To search with start of name (case insensitive): f name*"));
+				DEBUG_SERIAL.println(F("* To call it, just command: f [name|number] [arg]\r\n*"));
 
 				doBreak = true;
 			}
@@ -6863,7 +6863,7 @@ static int8_t showFunctions(String &options, bool one, bool debugSerialApp)
 		{
 
 			printSerialDebug();
-			Serial.println(F("Function not found."));
+			DEBUG_SERIAL.println(F("Function not found."));
 
 			doBreak = true;
 		}
@@ -6942,7 +6942,7 @@ static void callFunction(String &options)
 	if (!_debugFunctions[num].callback)
 	{ // Callback not set ?
 
-		Serial.println(F(") - no callback set for function"));
+		DEBUG_SERIAL.println(F(") - no callback set for function"));
 		return;
 	}
 
@@ -6952,7 +6952,7 @@ static void callFunction(String &options)
 		  _debugFunctions[num].argType == DEBUG_TYPE_CHAR_ARRAY))
 	{ // For others can not empty
 
-		Serial.println(F(") - argument not informed"));
+		DEBUG_SERIAL.println(F(") - argument not informed"));
 		return;
 	}
 
@@ -7111,7 +7111,7 @@ static void processGlobals(String &options)
 		if (fields.size() > 4)
 		{
 			printSerialDebug();
-			Serial.println(errorSintax);
+			DEBUG_SERIAL.println(errorSintax);
 			return;
 		}
 
@@ -7135,7 +7135,7 @@ static void processGlobals(String &options)
 				if (fields.size() == 2)
 				{
 					printSerialDebug();
-					Serial.println(errorSintax);
+					DEBUG_SERIAL.println(errorSintax);
 					return;
 				}
 				else
@@ -7150,7 +7150,7 @@ static void processGlobals(String &options)
 			{
 
 				printSerialDebug();
-				Serial.println(errorSintax);
+				DEBUG_SERIAL.println(errorSintax);
 				return;
 			}
 		}
@@ -7166,10 +7166,10 @@ static void processGlobals(String &options)
 	{
 
 		printSerialDebug();
-		Serial.println();
-		Serial.println(F("* Global variables not added to SerialDebug"));
+		DEBUG_SERIAL.println();
+		DEBUG_SERIAL.println(F("* Global variables not added to SerialDebug"));
 #ifndef BOARD_LOW_MEMORY // Not for low memory boards
-		Serial.println(F("* See how do it in advanced example"));
+		DEBUG_SERIAL.println(F("* See how do it in advanced example"));
 #endif
 	}
 }
@@ -7195,7 +7195,7 @@ static int8_t showGlobals(String &options, bool one, bool debugSerialApp)
 		if (one)
 		{
 			printSerialDebug();
-			Serial.println(F("Option not informed"));
+			DEBUG_SERIAL.println(F("Option not informed"));
 			return -1;
 		}
 
@@ -7217,7 +7217,7 @@ static int8_t showGlobals(String &options, bool one, bool debugSerialApp)
 			{
 
 				printSerialDebug();
-				Serial.println(F("* not allowed, use name or number instead"));
+				DEBUG_SERIAL.println(F("* not allowed, use name or number instead"));
 				return -1;
 			}
 
@@ -7260,7 +7260,7 @@ static int8_t showGlobals(String &options, bool one, bool debugSerialApp)
 		}
 		else
 		{
-			Serial.println(F("Searching and showing global variables and actual values:"));
+			DEBUG_SERIAL.println(F("Searching and showing global variables and actual values:"));
 		}
 	}
 
@@ -7331,15 +7331,15 @@ static int8_t showGlobals(String &options, bool one, bool debugSerialApp)
 					}
 					else if (_debugGlobals[i].descriptionF)
 					{ // For Flash F, multiples print
-						Serial.print(':');
-						Serial.println(_debugGlobals[i].descriptionF);
+						DEBUG_SERIAL.print(':');
+						DEBUG_SERIAL.println(_debugGlobals[i].descriptionF);
 					}
 					else
 					{
-						Serial.println();
+						DEBUG_SERIAL.println();
 					}
 #else
-					Serial.println();
+					DEBUG_SERIAL.println();
 #endif
 				}
 			}
@@ -7362,15 +7362,15 @@ static int8_t showGlobals(String &options, bool one, bool debugSerialApp)
 					}
 					else if (_debugGlobals[i].descriptionF)
 					{ // For Flash F, multiples print
-						Serial.print(F(" // "));
-						Serial.println(_debugGlobals[i].descriptionF);
+						DEBUG_SERIAL.print(F(" // "));
+						DEBUG_SERIAL.println(_debugGlobals[i].descriptionF);
 					}
 					else
 					{
-						Serial.println();
+						DEBUG_SERIAL.println();
 					}
 #else
-					Serial.println();
+					DEBUG_SERIAL.println();
 #endif
 
 					showed++;
@@ -7393,10 +7393,10 @@ static int8_t showGlobals(String &options, bool one, bool debugSerialApp)
 			{ // Not repeating
 
 				printSerialDebug();
-				Serial.println();
-				Serial.println(F("* To show: g [name|num]"));
-				Serial.println(F("* To search by start of name: g name*"));
-				Serial.println(F("* To change global variable, g [name|number] = value [y]\r\n*"));
+				DEBUG_SERIAL.println();
+				DEBUG_SERIAL.println(F("* To show: g [name|num]"));
+				DEBUG_SERIAL.println(F("* To search by start of name: g name*"));
+				DEBUG_SERIAL.println(F("* To change global variable, g [name|number] = value [y]\r\n*"));
 
 				doBreak = true;
 			}
@@ -7405,7 +7405,7 @@ static int8_t showGlobals(String &options, bool one, bool debugSerialApp)
 		{
 
 			printSerialDebug();
-			Serial.println(F("Global variable not found."));
+			DEBUG_SERIAL.println(F("Global variable not found."));
 
 			doBreak = true;
 		}
@@ -7445,7 +7445,7 @@ static bool showGlobal(uint8_t globalNum, debugEnumShowGlobais_t mode, bool getL
 	{
 
 		printSerialDebug();
-		Serial.println(F("Invalid index for global variable\r\n*"));
+		DEBUG_SERIAL.println(F("Invalid index for global variable\r\n*"));
 		return false;
 	}
 
@@ -7516,7 +7516,7 @@ static bool showGlobal(uint8_t globalNum, debugEnumShowGlobais_t mode, bool getL
 	{
 
 		printSerialDebug();
-		Serial.println(F("Not possible show global variable\r\n*"));
+		DEBUG_SERIAL.println(F("Not possible show global variable\r\n*"));
 		return false;
 	}
 	return true;
@@ -7565,7 +7565,7 @@ static void changeGlobal(Fields &fields)
 	{
 
 		printSerialDebug();
-		Serial.println(F("No value informed (right of '=' in command)"));
+		DEBUG_SERIAL.println(F("No value informed (right of '=' in command)"));
 		return;
 	}
 
@@ -7584,7 +7584,7 @@ static void changeGlobal(Fields &fields)
 		return;
 	}
 
-	Serial.println(F(" // <- This is a old value"));
+	DEBUG_SERIAL.println(F(" // <- This is a old value"));
 
 	//	D("changeGlobal: id->%s num=%d value = %s (%d)", globalId.c_str(), num, value.c_str(),value.length());
 
@@ -7612,7 +7612,7 @@ static void changeGlobal(Fields &fields)
 		else
 		{
 			printSerialDebug();
-			Serial.println(F("no bool in value (0|1|false|true|f|t"));
+			DEBUG_SERIAL.println(F("no bool in value (0|1|false|true|f|t"));
 			return;
 		}
 	}
@@ -7624,7 +7624,7 @@ static void changeGlobal(Fields &fields)
 		if (value.length() != 1)
 		{
 			printSerialDebug();
-			Serial.println(F("Note: string too large, truncated to size of 1"));
+			DEBUG_SERIAL.println(F("Note: string too large, truncated to size of 1"));
 			value = value.substring(0, 1);
 		}
 		type = F("char");
@@ -7638,7 +7638,7 @@ static void changeGlobal(Fields &fields)
 		if (!strIsNum(value))
 		{
 			printSerialDebug();
-			Serial.println(errorNoNumeric);
+			DEBUG_SERIAL.println(errorNoNumeric);
 			return;
 		}
 		type = F("int");
@@ -7648,7 +7648,7 @@ static void changeGlobal(Fields &fields)
 		if (!strIsNum(value))
 		{
 			printSerialDebug();
-			Serial.println(errorNoNumeric);
+			DEBUG_SERIAL.println(errorNoNumeric);
 			return;
 		}
 		type = F("unsigned int");
@@ -7657,7 +7657,7 @@ static void changeGlobal(Fields &fields)
 		if (!strIsNum(value))
 		{
 			printSerialDebug();
-			Serial.println(errorNoNumeric);
+			DEBUG_SERIAL.println(errorNoNumeric);
 			return;
 		}
 		type = F("long");
@@ -7667,7 +7667,7 @@ static void changeGlobal(Fields &fields)
 		if (!strIsNum(value))
 		{
 			printSerialDebug();
-			Serial.println(errorNoNumeric);
+			DEBUG_SERIAL.println(errorNoNumeric);
 			return;
 		}
 		type = F("unsigned long");
@@ -7677,7 +7677,7 @@ static void changeGlobal(Fields &fields)
 		if (!strIsNum(value))
 		{
 			printSerialDebug();
-			Serial.println(errorNoNumeric);
+			DEBUG_SERIAL.println(errorNoNumeric);
 			return;
 		}
 		type = F("float");
@@ -7686,7 +7686,7 @@ static void changeGlobal(Fields &fields)
 		if (!strIsNum(value))
 		{
 			printSerialDebug();
-			Serial.println(errorNoNumeric);
+			DEBUG_SERIAL.println(errorNoNumeric);
 			return;
 		}
 		type = F("double");
@@ -7698,7 +7698,7 @@ static void changeGlobal(Fields &fields)
 		if (!strIsNum(value))
 		{
 			printSerialDebug();
-			Serial.println(errorNoNumeric);
+			DEBUG_SERIAL.println(errorNoNumeric);
 			return;
 		}
 		type = F("int8_t");
@@ -7707,7 +7707,7 @@ static void changeGlobal(Fields &fields)
 		if (!strIsNum(value))
 		{
 			printSerialDebug();
-			Serial.println(errorNoNumeric);
+			DEBUG_SERIAL.println(errorNoNumeric);
 			return;
 		}
 		type = F("int16_t");
@@ -7716,7 +7716,7 @@ static void changeGlobal(Fields &fields)
 		if (!strIsNum(value))
 		{
 			printSerialDebug();
-			Serial.println(errorNoNumeric);
+			DEBUG_SERIAL.println(errorNoNumeric);
 			return;
 		}
 		type = F("int32_t");
@@ -7733,7 +7733,7 @@ static void changeGlobal(Fields &fields)
 		if (!strIsNum(value))
 		{
 			printSerialDebug();
-			Serial.println(errorNoNumeric);
+			DEBUG_SERIAL.println(errorNoNumeric);
 			return;
 		}
 		type = F("uint8_t");
@@ -7742,7 +7742,7 @@ static void changeGlobal(Fields &fields)
 		if (!strIsNum(value))
 		{
 			printSerialDebug();
-			Serial.println(errorNoNumeric);
+			DEBUG_SERIAL.println(errorNoNumeric);
 			return;
 		}
 		type = F("uint16_t");
@@ -7751,7 +7751,7 @@ static void changeGlobal(Fields &fields)
 		if (!strIsNum(value))
 		{
 			printSerialDebug();
-			Serial.println(errorNoNumeric);
+			DEBUG_SERIAL.println(errorNoNumeric);
 			return;
 		}
 		type = F("uint32_t");
@@ -7774,7 +7774,7 @@ static void changeGlobal(Fields &fields)
 		//				}
 		//				type = "char array";
 		printSerialDebug();
-		Serial.println(F("Not allowed change char arrays (due memory issues)"));
+		DEBUG_SERIAL.println(F("Not allowed change char arrays (due memory issues)"));
 		return;
 	}
 	break;
@@ -7798,7 +7798,7 @@ static void changeGlobal(Fields &fields)
 	{ // Flash memory
 		PRINTF(F("* %02u %s(%s) = %s"), (num + 1), _debugString.c_str(), type.c_str(), show.c_str());
 	}
-	Serial.println(F(" // <- This is a new value"));
+	DEBUG_SERIAL.println(F(" // <- This is a new value"));
 
 	// Show a confirm message and wait from response (if not "y" passed to last field)
 
@@ -7976,13 +7976,13 @@ static void changeGlobal(Fields &fields)
 		{ // Flash memory
 			PRINTF(F("* %02u %s(%s) = %s"), (num + 1), _debugString.c_str(), type.c_str(), show.c_str());
 		}
-		Serial.println(F(" // <- This has changed w/ success"));
+		DEBUG_SERIAL.println(F(" // <- This has changed w/ success"));
 	}
 	else
 	{
 
 		printSerialDebug();
-		Serial.println(F("Variable global not changed"));
+		DEBUG_SERIAL.println(F("Variable global not changed"));
 	}
 
 	// Clear buffer

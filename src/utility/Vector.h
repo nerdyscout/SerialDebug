@@ -37,123 +37,141 @@
 #include <Arduino.h>
 
 //* Begin change by JoaoLopesF
-//#define INT int
+// #define INT int
 #define INT uint8_t
 // Replace all i++ to i++
 //* End change by JoaoLopes
 
-//as far as I can tell placement new is not included with AVR or arduino.h
-template<typename T>
-void* operator new(size_t s, T* v){
+// as far as I can tell placement new is not included with AVR or arduino.h
+template <typename T>
+void *operator new(size_t s, T *v)
+{
 	return v;
 }
 
 //*********************************************************************************
 //                               Allocator for Vector
 //*********************************************************************************
-template<typename T> struct Simple_alloc {
+template <typename T>
+struct Simple_alloc
+{
 
-	Simple_alloc() {};
+	Simple_alloc(){};
 
-	//memory allocation
-	T* allocate(INT n)
-		{ return reinterpret_cast<T*>(new char[n*sizeof(T)]); }
-	void deallocate(T* p, INT n)
-		{ delete[] reinterpret_cast<char*>(p); }
+	// memory allocation
+	T *allocate(INT n)
+	{
+		return reinterpret_cast<T *>(new char[n * sizeof(T)]);
+	}
+	void deallocate(T *p, INT n)
+	{
+		delete[] reinterpret_cast<char *>(p);
+	}
 
-	//construction/destruction
-	void construct(T* p, const T& t) { new(p) T(t); }
-	void destroy(T* p) { p->~T(); }
+	// construction/destruction
+	void construct(T *p, const T &t) { new (p) T(t); }
+	void destroy(T *p) { p->~T(); }
 };
 
 //*********************************************************************************
 //                               Vector
 //*********************************************************************************
-template<class T, class A = Simple_alloc<T> >
-class Vector {
+template <class T, class A = Simple_alloc<T>>
+class Vector
+{
 
 	A alloc;
 
 	INT sz;
-	T* elem;
+	T *elem;
 	INT space;
 
-	Vector(const Vector&);			//private copy constrution because I
-									//have not got this working yet and don't
-									//want to expose this for clients who might
-									//be expecting it.
+	Vector(const Vector &); // private copy constrution because I
+							// have not got this working yet and don't
+							// want to expose this for clients who might
+							// be expecting it.
 
 public:
 	Vector() : sz(0), elem(0), space(0) {}
-	Vector(const INT s) : sz(0) {
+	Vector(const INT s) : sz(0)
+	{
 		reserve(s);
 	}
 
-	Vector& operator=(const Vector&);	//copy assignment
+	Vector &operator=(const Vector &); // copy assignment
 
-	~Vector() {
+	~Vector()
+	{
 		//* Begin change by JoaoLopesF
-		//for(INT i=0; i<sz; i++) alloc.destroy(&elem[i]);
+		// for(INT i=0; i<sz; i++) alloc.destroy(&elem[i]);
 		clear();
 		//* End change by JoaoLopes
 	}
 
-	T& operator[](INT n) { return elem[n]; }
-	const T& operator[](INT n) const { return elem[n]; }
+	T &operator[](INT n) { return elem[n]; }
+	const T &operator[](INT n) const { return elem[n]; }
 
 	INT size() const { return sz; }
 	INT capacity() const { return space; }
 
 	void reserve(INT newalloc);
-	void push_back(const T& val);
+	void push_back(const T &val);
 
 	//* Begin change by JoaoLopesF
 	void erase(INT index);
 	void clear();
 	//* End change by JoaoLopes
-
 };
 
-template<class T, class A>
-Vector<T, A>& Vector<T, A>::operator=(const Vector& a) {
-	if(this==&a) return *this;
+template <class T, class A>
+Vector<T, A> &Vector<T, A>::operator=(const Vector &a)
+{
+	if (this == &a)
+		return *this;
 
-	if(a.size()<=space) {	//enough space, no need for new allocation
-		for(INT i=0; i<a.size(); i++)
-			elem[i]=a[i];
+	if (a.size() <= space)
+	{ // enough space, no need for new allocation
+		for (INT i = 0; i < a.size(); i++)
+			elem[i] = a[i];
 		sz = a.size();
 		return *this;
 	}
 
-	T* p = alloc.allocate(a.size());	//get new memory
-	for(INT i=0; i<a.size(); i++)
-		alloc.construct(&p[i], a[i]);	//copy
-	for(INT i=0; i<sz; i++)
+	T *p = alloc.allocate(a.size()); // get new memory
+	for (INT i = 0; i < a.size(); i++)
+		alloc.construct(&p[i], a[i]); // copy
+	for (INT i = 0; i < sz; i++)
 		alloc.destroy(&elem[i]);
 	space = sz = a.size();
 	elem = p;
 	return *this;
 }
 
-template<class T, class A> void Vector<T, A>::reserve(INT newalloc){
-	if(newalloc <= space) return;		                    //never decrease space
-	T* p = alloc.allocate(newalloc);
-	for(INT i=0; i<sz; i++)
-		alloc.construct(&p[i], elem[i]);	//copy
-	for(INT i=0; i<sz; i++)
+template <class T, class A>
+void Vector<T, A>::reserve(INT newalloc)
+{
+	if (newalloc <= space)
+		return; // never decrease space
+	T *p = alloc.allocate(newalloc);
+	for (INT i = 0; i < sz; i++)
+		alloc.construct(&p[i], elem[i]); // copy
+	for (INT i = 0; i < sz; i++)
 		alloc.destroy(&elem[i]);
 	alloc.deallocate(elem, space);
 	elem = p;
 	space = newalloc;
 }
 
-template<class T, class A>
-void Vector<T, A>::push_back(const T& val){
+template <class T, class A>
+void Vector<T, A>::push_back(const T &val)
+{
 	//* Begin change by JoaoLopesF
-//	if(space == 0) reserve(4);				//start small
-//	else if(sz==space) reserve(2*space);
-	if(space == 0) reserve(2);				//Just alloc more few items
-	else if(sz==space) reserve(space + 2);
+	//	if(space == 0) reserve(4);				//start small
+	//	else if(sz==space) reserve(2*space);
+	if (space == 0)
+		reserve(2); // Just alloc more few items
+	else if (sz == space)
+		reserve(space + 2);
 	//* End change by JoaoLopes
 	alloc.construct(&elem[sz], val);
 	++sz;
@@ -161,15 +179,18 @@ void Vector<T, A>::push_back(const T& val){
 
 //* Begin change by JoaoLopesF
 
-template<class T, class A> void Vector<T, A>::erase(INT index){ // Erase one item
-	if(index >= sz) return;
+template <class T, class A>
+void Vector<T, A>::erase(INT index)
+{ // Erase one item
+	if (index >= sz)
+		return;
 	INT newalloc = sz - 1;
-	T* p = alloc.allocate(newalloc);
+	T *p = alloc.allocate(newalloc);
 	INT add = 0;
-	for(INT i=0; i<sz; i++)
-		if (i != index) // Not for item to be erased
-			alloc.construct(&p[add++], elem[i]); //copy
-	for(INT i=0; i<sz; i++)
+	for (INT i = 0; i < sz; i++)
+		if (i != index)							 // Not for item to be erased
+			alloc.construct(&p[add++], elem[i]); // copy
+	for (INT i = 0; i < sz; i++)
 		alloc.destroy(&elem[i]);
 	alloc.deallocate(elem, space);
 	elem = p;
@@ -177,21 +198,23 @@ template<class T, class A> void Vector<T, A>::erase(INT index){ // Erase one ite
 	sz = newalloc;
 }
 
-template<class T, class A> void Vector<T, A>::clear(){ // Clear all
-	for(INT i=0; i<sz; i++)
+template <class T, class A>
+void Vector<T, A>::clear()
+{ // Clear all
+	for (INT i = 0; i < sz; i++)
 		alloc.destroy(&elem[i]);
-	if (space > 0) {
-//		Serial.print("*** clear: size= ");
-//		Serial.print(sz);
-//		Serial.print(" space=");
-//		Serial.println(space);
+	if (space > 0)
+	{
+		//		DEBUG_SERIAL.print("*** clear: size= ");
+		//		DEBUG_SERIAL.print(sz);
+		//		DEBUG_SERIAL.print(" space=");
+		//		DEBUG_SERIAL.println(space);
 		alloc.deallocate(elem, space);
 	}
-	sz=0;
-	space=0;
-	elem=0;
+	sz = 0;
+	space = 0;
+	elem = 0;
 }
 
 //* End change by JoaoLopes
 #endif
-
